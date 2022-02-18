@@ -1,4 +1,4 @@
-import { times, sampleSize, sample, random } from 'lodash'
+import { find, times, sampleSize, sample, random } from 'lodash'
 import randomColor from 'randomcolor'
 
 export const generatePlayers = (players: any, blocks: any) => {
@@ -55,26 +55,18 @@ export const generateShape = () => {
   const startingPoint = startingPoints[cornerIndex]
   const possibleMovement = possibleMovements[cornerIndex]
 
-  let direction = sample(['x', 'y']) as 'x' | 'y'
-  let oppositeDirection = (direction === 'x' && 'y') || 'x' as 'x' | 'y'
-
   times(amountFilledPositions, (i) => {
     if (i === 0) {
       shape.push(startingPoint)
     } else {
-      console.log(i)
-      let nextBlock = { ...shape[i - 1] }
+      let blockExists: any = true
+      let nextBlock: any = null
 
-      console.log(nextBlock)
-      nextBlock[direction] += possibleMovement[direction]
-
-      if (nextBlock[direction] > 2) {
-        const shouldChangeDirection = random()
-
-        if (shouldChangeDirection) {
-          nextBlock = { ...shape[0] }
-          nextBlock.y += possibleMovement[oppositeDirection]
-        }
+      while (blockExists) {
+        nextBlock = { ...sample(shape) }
+        const randomDirection = sample(['x', 'y']) as 'x' | 'y'
+        nextBlock[randomDirection] += possibleMovement[randomDirection]
+        blockExists = find(shape, { ...nextBlock })
       }
 
       shape.push(nextBlock)

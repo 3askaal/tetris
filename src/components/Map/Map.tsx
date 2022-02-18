@@ -63,7 +63,14 @@ export const Map = ({ style } : any) => {
       )) }
       {}
       { shapes.map((shape: any, index: number) => (
-        <Box s={{ position: 'relative', left: '6rem', top: '10rem'  }}>
+        <Box s={{
+          position: 'relative',
+          left: '7rem',
+          top: '10rem',
+          height: '5rem',
+          width: '5rem',
+          border: '1px solid red'
+        }}>
           { shape.map((block: any, index: number) => (
             <SMapBlock
               color="#787A91"
