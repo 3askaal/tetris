@@ -14,7 +14,7 @@ import { SOCKET_URL } from '../constants';
 
 export const history = createBrowserHistory()
 
-ReactGA.initialize('G-40XGVJPSNY')
+ReactGA.initialize('G-ELXJS2W0GL')
 
 const App = () => {
   return (
