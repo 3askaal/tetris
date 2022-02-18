@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap');
+
+@font-face {
+  font-family: 'GoodDog';
+  src: url('../assets/fonts/gooddog/gooddog.eot');
+  src: url('../assets/fonts/gooddog/gooddog.eot?#iefix')
+      format('embedded-opentype'),
+    url('../assets/fonts/gooddog/gooddog.woff') format('woff'),
+    url('../assets/fonts/gooddog/gooddog.ttf') format('truetype'),
+    url('../assets/fonts/gooddog/gooddog.svg#gooddogregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Niconne&display=swap');
