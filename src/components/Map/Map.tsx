@@ -66,7 +66,7 @@ export const Map = ({ style } : any) => {
         <Box s={{
           position: 'relative',
           left: '7rem',
-          top: '10rem',
+          top: '8rem',
           height: '5rem',
           width: '5rem',
           border: '1px solid red'
