@@ -1,7 +1,7 @@
 import { times, sampleSize } from 'lodash'
 import randomColor from 'randomcolor'
 
-export const generatePlayers = (players: any, blocks: number) => {
+export const generatePlayers = (players: any, blocks: any) => {
   const topLeftPosition = { x: 0, y: 0 }
   const topRightPosition = { x: blocks, y: 0 }
   const bottomLeftPosition = { x: 0, y: blocks }
@@ -24,35 +24,42 @@ export const generatePlayers = (players: any, blocks: number) => {
   }))
 }
 
-export const generateGrid = (blocks: number) => {
+export const generateGrid = ({ height, width }: { height: number, width: number }) => {
   let newGrid: any = {}
-  const amountBricksForUnevenCube = (blocks * blocks) + blocks + blocks + 1
+  const amountPositions = height * width
 
-  times(amountBricksForUnevenCube, (i) => {
-    const y = (i - (i % (blocks + 1))) / (blocks + 1)
-    const x = i % (blocks + 1)
+  times(amountPositions, (i) => {
+    const y = (i - (i % width)) / height * 2
+    const x = i % width
 
     newGrid[`${x}/${y}`] = { x, y }
   })
 
-  newGrid = generateStones(newGrid)
-  newGrid = generateBricks(newGrid, blocks)
+  console.log(newGrid)
+
+  newGrid = generateStones(newGrid, height, width)
 
   return newGrid
 }
 
-export const generateStones = (grid: any) => {
+export const generateStones = (grid: any, height: number, width: number) => {
   let newGrid = { ...grid }
 
   Object.values(grid).forEach((block: any) => {
     const { x, y } = block
 
-    if (y % 2 && x % 2) {
+    const isTopRow = y === 0
+    const isBottomRow = y === height - 1
+    const isleftRow = x === 0
+    const isRightRow = x === width - 1
+
+    if (isTopRow || isBottomRow || isleftRow || isRightRow) {
+      console.log('test')
       newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], stone: true }}
-      return true
+      // return true
     }
 
-    return false
+    // return false
   })
 
   return newGrid

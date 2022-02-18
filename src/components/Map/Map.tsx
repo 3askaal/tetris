@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
-import { SMap, SMapStone, SMapCharacter, SMapBrick, SMapBomb } from './Map.styled'
+import { times } from 'lodash'
+import { SMap, SMapBlock } from './Map.styled'
 import { GameContext } from '../../context'
-import { Explosion } from '../Explosion/Explosion'
 
-export const Map = ({ style, blocks } : any) => {
-  const { grid, bombs, explosions, players }: any = useContext(GameContext)
+export const Map = ({ style } : any) => {
+  const { dimensions, grid, bombs, explosions, players }: any = useContext(GameContext)
 
   const getBombs = () => {
     return bombs ? Object.values(bombs).filter(({ bomb }: any) => bomb) : []
@@ -31,46 +31,25 @@ export const Map = ({ style, blocks } : any) => {
   }
 
   return (
-    <SMap style={{style}} blocks={blocks + 1}>
-      { getActivePlayers().map(({x, y, color}: any, index: number) => (
-        <SMapCharacter
-          key={index}
+    <SMap style={{style}} width={dimensions.width} height={dimensions.height}>
+      {/* { times(22 * 44, (i) => (
+        <SMapBlock
           s={{
-            transform: `translate3d(${x}rem, ${y}rem, 0)`
+            left: `${x}rem`,
+            top: `${y}rem`
           }}
-          color={color}
         />
-      )) }
+
+      )) } */}
       { getStones().map(({x, y}: any, index: number) => (
-        <SMapStone
-          key={index}
+        <SMapBlock
+          color="#787A91"
           s={{
             left: `${x}rem`,
             top: `${y}rem`
           }}
         />
       )) }
-      { getBricks().map(({x, y}: any, index: number) => (
-        <SMapBrick
-          key={index}
-          s={{
-            left: `${x}rem`,
-            top: `${y}rem`,
-          }}
-        />
-      )) }
-      { getBombs().map(({x, y}: any, index: number) => (
-        <SMapBomb
-          key={index}
-          s={{
-            left: `${x}rem`,
-            top: `${y}rem`,
-          }}
-        />
-      )) }
-      { getExplosions().map((explosion: any, index: number) => (
-        <Explosion explosion={explosion} index={index} />
-      ))}
     </SMap>
   )
 }

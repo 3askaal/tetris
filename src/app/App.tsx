@@ -58,12 +58,12 @@ const App = () => {
         <Router history={history}>
           <SocketIOProvider url={SOCKET_URL}>
             <Switch>
-              <Route exact path="/">
+              {/* <Route exact path="/">
                 <HomeView />
-              </Route>
+              </Route> */}
               <GameProvider>
                 <SocketProvider>
-                  <Route exact path="/setup">
+                  {/* <Route exact path="/setup">
                     <SetupView />
                   </Route>
                   <Route exact path="/rooms">
@@ -71,8 +71,8 @@ const App = () => {
                   </Route>
                   <Route exact path="/rooms/:roomId">
                     <LobbyView />
-                  </Route>
-                  <Route exact path="/play/:roomId?">
+                  </Route> */}
+                  <Route exact path="/">
                     <PlayView />
                   </Route>
                 </SocketProvider>

@@ -18,7 +18,7 @@ const PlayView = () => {
     players,
     remainingTime,
     onStartGame,
-    blocks,
+    dimensions,
     onGameMove,
     onGameBomb,
     settings,
@@ -33,13 +33,13 @@ const PlayView = () => {
 
   useEffect(() => {
     ReactGA.send({ hitType: "pageview", page: "/play" });
+    onStartGame()
 
     const debug = new URLSearchParams(search).get('debug');
 
     if (debug) {
       setSettings({ type: 'local' })
       setPlayers([{ name: faker.name.firstName(), x: 0, y: 0 }, { name: faker.name.firstName(), x: 0, y: 0 }])
-      onStartGame()
     }
     // else if (settings.type !== 'local' && !roomId) {
     //   history.push('/')
@@ -58,45 +58,10 @@ const PlayView = () => {
 
   return (
     <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
-      <Container s={{ alignItems: 'center' }}>
-        <Box
-          s={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            justifyContent: 'space-between',
-            alignContent: 'space-between',
-            flexDirection: 'row',
-            display: 'flex',
-            flexWrap: 'wrap'
-          }}
-        >
-          { players?.map((player: any, playerIndex: number) => (
-            <Box
-              key={`player${playerIndex}`}
-              s={{
-                display: 'inline-flex',
-                width: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <PlayerDetails
-                onMove={(direction: string, movement: number) => onGameMove({ playerIndex, direction, movement })}
-                player={player}
-                onBomb={() => onGameBomb({ playerIndex })}
-                hasControls={settings?.type === 'local' || socket?.id === player.socketId}
-              />
-            </Box>
-          )) }
-        </Box>
-        <Box s={{ flexGrow: 1, height: '100%', flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-          <Spacer size="xs">
-            <Timer />
-            <Map blocks={blocks} />
-          </Spacer>
-        </Box>
+      <Container s={{ alignItems: 'center', pt: '4rem' }}>
+        <Map />
       </Container>
-      { gameOver() && (
+      {/* { gameOver() && (
         <Popup
           actions={[
             <Button onClick={() => onStartGame({}, false)}>Restart</Button>
@@ -108,7 +73,7 @@ const PlayView = () => {
               `Time limit reached!`
           } Click restart to start over!</Text>
         </Popup>
-      ) }
+      ) } */}
     </Wrapper>
   )
 }

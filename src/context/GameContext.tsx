@@ -11,7 +11,7 @@ import { generateGrid, generatePlayers } from '../helpers/generate';
 interface GameContextType {
   socket?: Socket;
 
-  blocks?: number;
+  dimensions?: { height: number, width: number };
   grid?: IGrid;
   bombs?: IBomb;
   explosions?: IExplosion;
@@ -24,7 +24,6 @@ interface GameContextType {
 
   [key: string]: any;
 }
-
 
 
 export const GameContext = createContext<GameContextType>({
@@ -52,7 +51,7 @@ export const GameProvider = ({ children }: any) => {
   const [rooms, setRooms] = useState<any>([])
   const [settings, setSettings] = useState<any>({})
   const [remainingTime, setRemainingTime] = useState<number>(1000)
-  const [blocks] = useState(16)
+  const [dimensions] = useState({ height: 40, width: 20 })
   const [grid, setGrid] = useState<any>({})
   const [bombs, setBombs] = useState<any>(null)
   const [explosions, setExplosions] = useState<any>(null)
@@ -60,13 +59,13 @@ export const GameProvider = ({ children }: any) => {
   const onStartGame = (args: any, restart?: boolean) => {
     // initialize data
     const { grid: newGrid, players: newPlayers, time: remainingTime } = args || {}
-    setGrid(newGrid || generateGrid(blocks))
-    setPlayers((currentPlayers) => newPlayers || generatePlayers(currentPlayers, blocks))
+    setGrid(newGrid || generateGrid(dimensions))
+    // setPlayers((currentPlayers) => newPlayers || generatePlayers(currentPlayers, dimensions))
     setRemainingTime(remainingTime || 3 * 60 * 1000)
 
     if (!restart) {
       // navigate to play view
-      history.push('/play')
+      // history.push('/play')
     }
 
     ReactGA4.event({
@@ -85,7 +84,7 @@ export const GameProvider = ({ children }: any) => {
 
     newPlayer[direction] += movement
 
-    const positionIsOutOfMap = newPlayer[direction] > blocks || newPlayer[direction] < 0
+    const positionIsOutOfMap = newPlayer.x > dimensions.width || newPlayer.x < 0 || newPlayer.y > dimensions.height || newPlayer.y < 0
 
     if (positionIsOutOfMap) {
       return;
@@ -173,7 +172,7 @@ export const GameProvider = ({ children }: any) => {
         getOpponents,
         currentPlayer,
         setCurrentPlayer,
-        blocks,
+        dimensions,
         grid,
         setGrid,
         bombs,
