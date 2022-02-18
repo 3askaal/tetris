@@ -1,4 +1,4 @@
-import { times, sampleSize } from 'lodash'
+import { times, sampleSize, sample, random } from 'lodash'
 import randomColor from 'randomcolor'
 
 export const generatePlayers = (players: any, blocks: any) => {
@@ -35,11 +35,55 @@ export const generateGrid = ({ height, width }: { height: number, width: number 
     newGrid[`${x}/${y}`] = { x, y }
   })
 
-  console.log(newGrid)
-
   newGrid = generateStones(newGrid, height, width)
 
   return newGrid
+}
+
+export const generateShape = () => {
+  const shape: { x: number, y: number }[] = []
+
+  const amountPositions = 4 * 4
+
+  const amountFilledPositions = random(2, amountPositions / 2)
+
+  const startingPoints = [{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 4, y: 0 }, { x: 4, y: 4 }]
+  const possibleMovements = [{ x: 1, y: 1 } , { x: 1, y: -1 }, { x: -1, y: 1 }, { x: -1, y: -1 }];
+
+  const cornerIndex = random(3)
+
+  const startingPoint = startingPoints[cornerIndex]
+  const possibleMovement = possibleMovements[cornerIndex]
+
+  let direction = sample(['x', 'y']) as 'x' | 'y'
+  let oppositeDirection = (direction === 'x' && 'y') || 'x' as 'x' | 'y'
+
+  times(amountFilledPositions, (i) => {
+    if (i === 0) {
+      shape.push(startingPoint)
+    } else {
+      console.log(i)
+      let nextBlock = { ...shape[i - 1] }
+
+      console.log(nextBlock)
+      nextBlock[direction] += possibleMovement[direction]
+
+      if (nextBlock[direction] > 2) {
+        const shouldChangeDirection = random()
+
+        if (shouldChangeDirection) {
+          nextBlock = { ...shape[0] }
+          nextBlock.y += possibleMovement[oppositeDirection]
+        }
+      }
+
+      shape.push(nextBlock)
+    }
+  })
+
+  console.log(shape)
+
+  return shape
 }
 
 export const generateStones = (grid: any, height: number, width: number) => {

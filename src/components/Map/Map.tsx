@@ -1,10 +1,13 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { times } from 'lodash'
+import { Box } from '3oilerplate'
 import { SMap, SMapBlock } from './Map.styled'
 import { GameContext } from '../../context'
+import { generateShape } from '../../helpers/generate'
 
 export const Map = ({ style } : any) => {
   const { dimensions, grid, bombs, explosions, players }: any = useContext(GameContext)
+  const [shapes, setShapes] = useState([])
 
   const getBombs = () => {
     return bombs ? Object.values(bombs).filter(({ bomb }: any) => bomb) : []
@@ -30,6 +33,14 @@ export const Map = ({ style } : any) => {
     return getPlayers().filter(({ health }: any) => health)
   }
 
+  const getShape = () => {
+    return generateShape()
+  }
+
+  useEffect(() => {
+    setShapes((currentShapes): any => [...currentShapes, generateShape()])
+  }, [])
+
   return (
     <SMap style={{style}} width={dimensions.width} height={dimensions.height}>
       {/* { times(22 * 44, (i) => (
@@ -49,6 +60,20 @@ export const Map = ({ style } : any) => {
             top: `${y}rem`
           }}
         />
+      )) }
+      {}
+      { shapes.map((shape: any, index: number) => (
+        <Box s={{ position: 'relative', left: '6rem', top: '10rem'  }}>
+          { shape.map((block: any, index: number) => (
+            <SMapBlock
+              color="#787A91"
+              s={{
+                left: `${block.x}rem`,
+                top: `${block.y}rem`
+              }}
+            />
+          )) }
+        </Box>
       )) }
     </SMap>
   )

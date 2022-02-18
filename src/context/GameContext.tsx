@@ -45,7 +45,7 @@ interface BombActionPayload {
 
 export const GameProvider = ({ children }: any) => {
   const history = useHistory()
-  const { socket } = useSocket()
+  // const { socket } = useSocket()
   const [players, setPlayers] = useState<IPlayer[]>([])
   const [currentPlayer, setCurrentPlayer] = useState<IPlayer>()
   const [rooms, setRooms] = useState<any>([])
@@ -139,21 +139,21 @@ export const GameProvider = ({ children }: any) => {
   }, remainingTime ? 1000 : null)
 
 
-  const getOpponents = (): any[] => players.filter(({ socketId }: any) => socketId !== socket.id)
+  // const getOpponents = (): any[] => players.filter(({ socketId }: any) => socketId !== socket.id)
 
-  useEffect(() => {
-    setCurrentPlayer(players.find(({ socketId }: any) => socketId === socket.id) as IPlayer)
-  }, [players])
+  // useEffect(() => {
+  //   setCurrentPlayer(players.find(({ socketId }: any) => socketId === socket.id) as IPlayer)
+  // }, [players])
 
-  const getActivePlayers = (): any[] => {
-    return [...(players || [])].sort((a: any, b: any) => b.health - a.health).filter(({ health }: any) => health > 0)
-  }
+  // const getActivePlayers = (): any[] => {
+  //   return [...(players || [])].sort((a: any, b: any) => b.health - a.health).filter(({ health }: any) => health > 0)
+  // }
 
-  const gameOver = () => getActivePlayers().length === 1 || !remainingTime
+  const gameOver = () => !remainingTime
 
-  const getWinner = (): any => {
-    return gameOver() ? getActivePlayers()[0] : false
-  }
+  // const getWinner = (): any => {
+  //   return gameOver() ? getActivePlayers()[0] : false
+  // }
 
   return (
     <GameContext.Provider
@@ -169,7 +169,7 @@ export const GameProvider = ({ children }: any) => {
         settings,
         setSettings,
         remainingTime,
-        getOpponents,
+        // getOpponents,
         currentPlayer,
         setCurrentPlayer,
         dimensions,
@@ -179,9 +179,9 @@ export const GameProvider = ({ children }: any) => {
         setBombs,
         explosions,
         setExplosions,
-        getActivePlayers,
+        // getActivePlayers,
         gameOver,
-        getWinner,
+        // getWinner,
       }}
     >
       {children}
