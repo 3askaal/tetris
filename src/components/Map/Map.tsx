@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Box } from '3oilerplate'
 import { SMap, SMapBlock } from './Map.styled'
 import { GameContext } from '../../context'
-import { generateShape } from '../../helpers/generate'
+import { generateShape, Shape } from '../../helpers/generate'
 import { useInterval } from '../../helpers/interval'
 
 export const Map = ({ style } : any) => {
   const { dimensions, grid, bombs, explosions, players }: any = useContext(GameContext)
-  const [shapes, setShapes] = useState([])
+  const [shape, setShape] = useState<Shape | null>(null)
+  const [shapes, setShapes] = useState<Shape[]>([])
 
   // const getBombs = () => {
   //   return bombs ? Object.values(bombs).filter(({ bomb }: any) => bomb) : []
@@ -38,12 +39,26 @@ export const Map = ({ style } : any) => {
   // }
 
   useEffect(() => {
-    setShapes((currentShapes): any => [generateShape()])
+    setShape((currentShapes): any => generateShape(dimensions))
+    // setShapes((currentShapes): any => [generateShape()])
   }, [])
 
+  useEffect(() => {
+    console.log('shapes[0].x: ', shapes[0]?.x)
+  }, [shapes])
+
+  useEffect(() => {
+    console.log('shape.x: ', shape?.x)
+  }, [shape])
+
   useInterval(() => {
-    setShapes((currentShapes): any => [generateShape()])
-  }, 1000)
+    if (shape && (shape.y + shape.height) === dimensions.height - 1) {
+      setShapes((currentShapes) => [ ...currentShapes, shape ])
+      setShape(generateShape(dimensions))
+    } else {
+      setShape((currentShape): any => currentShape ? ({ ...currentShape, y: currentShape?.y + 1 }) : null)
+    }
+  }, 500)
 
   return (
     <SMap style={{style}} width={dimensions.width} height={dimensions.height}>
@@ -66,12 +81,30 @@ export const Map = ({ style } : any) => {
           }}
         />
       )) }
-      {}
+      { shape && shape.width ? (
+        <Box s={{
+          position: 'absolute',
+          left: `${shape.x}rem`,
+          top: `${shape.y}rem`,
+          height: shape.height + 'rem',
+          width: shape.width + 'rem'
+        }}>
+          { shape.blocks.map((block: any, index: number) => (
+            <SMapBlock
+              color={shape.color}
+              s={{
+                left: `${block.x}rem`,
+                top: `${block.y}rem`
+              }}
+            />
+          )) }
+        </Box>
+      ) : null }
       { shapes.map((shape: any, index: number) => (
         <Box s={{
-          position: 'relative',
-          left: `${Math.floor(dimensions.width / 2) - Math.ceil(shape.width / 2)}rem`,
-          top: '3rem',
+          position: 'absolute',
+          left: `${shape.x}rem`,
+          top: `${shape.y}rem`,
           height: shape.height + 'rem',
           width: shape.width + 'rem'
         }}>

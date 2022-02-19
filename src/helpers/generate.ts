@@ -40,17 +40,23 @@ export const generateGrid = ({ height, width }: { height: number, width: number 
   return newGrid
 }
 
-interface Shape {
+export interface Shape {
   color: string;
   blocks: { x: number, y: number }[];
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
 }
 
-export const generateShape = () => {
+export const generateShape = (dimensions: any) => {
   const shape: Shape = {
     color: randomColor(),
     blocks: [],
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 2,
   };
 
   const amountPositions = 4 * 4
@@ -92,6 +98,7 @@ export const generateShape = () => {
 
   shape.width = (maxX - minX) + 1
   shape.height = (maxY - minY) + 1
+  shape.x = Math.floor(dimensions.width / 2) - Math.ceil(shape.width / 2)
 
   return shape
 }
