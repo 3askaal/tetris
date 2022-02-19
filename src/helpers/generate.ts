@@ -40,8 +40,16 @@ export const generateGrid = ({ height, width }: { height: number, width: number 
   return newGrid
 }
 
+interface Shape {
+  color: string;
+  blocks: { x: number, y: number }[]
+}
+
 export const generateShape = () => {
-  const shape: { x: number, y: number }[] = []
+  const shape: Shape = {
+    color: randomColor(),
+    blocks: []
+  };
 
   const amountPositions = 4 * 4
 
@@ -57,23 +65,21 @@ export const generateShape = () => {
 
   times(amountFilledPositions, (i) => {
     if (i === 0) {
-      shape.push(startingPoint)
+      shape.blocks.push(startingPoint)
     } else {
       let blockExists: any = true
       let nextBlock: any = null
 
       while (blockExists) {
-        nextBlock = { ...sample(shape) }
+        nextBlock = { ...sample(shape.blocks) }
         const randomDirection = sample(['x', 'y']) as 'x' | 'y'
         nextBlock[randomDirection] += possibleMovement[randomDirection]
         blockExists = find(shape, { ...nextBlock })
       }
 
-      shape.push(nextBlock)
+      shape.blocks.push(nextBlock)
     }
   })
-
-  console.log(shape)
 
   return shape
 }

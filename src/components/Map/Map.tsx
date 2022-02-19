@@ -71,9 +71,9 @@ export const Map = ({ style } : any) => {
           width: '5rem',
           border: '1px solid red'
         }}>
-          { shape.map((block: any, index: number) => (
+          { shape.blocks.map((block: any, index: number) => (
             <SMapBlock
-              color="#787A91"
+              color={shape.color}
               s={{
                 left: `${block.x}rem`,
                 top: `${block.y}rem`
