@@ -75,8 +75,6 @@ export const Map = ({ style } : any) => {
 
       const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height - 1
 
-      // const nextPos = { ...activeShape, y: activeShape.y + 1}
-
       const hitsBlock = bottomShapes.length && bottomShapes.some((bottomShape) =>
         bottomShape.blocks.some((bottomBlock) =>
           activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) === (bottomShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (bottomShape.y + bottomBlock.y))
