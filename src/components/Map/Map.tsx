@@ -22,6 +22,14 @@ export const Map = ({ style } : any) => {
     return grid ? Object.values(grid).filter(({ stone }: any) => stone) : []
   }
 
+  const getActiveShape = () => {
+    return shapes.filter(({ active }) => active)[0]
+  }
+
+  const getShapes = () => {
+    return shapes.filter(({ active }) => !active)
+  }
+
   // const getBricks = () => {
   //   return grid ? Object.values(grid).filter(({ brick }: any) => brick) : []
   // }
@@ -39,25 +47,48 @@ export const Map = ({ style } : any) => {
   // }
 
   useEffect(() => {
-    setShape((currentShapes): any => generateShape(dimensions))
+    setShapes([generateShape(dimensions)])
     // setShapes((currentShapes): any => [generateShape()])
   }, [])
 
   useEffect(() => {
-    console.log('shapes[0].x: ', shapes[0]?.x)
+    // if (shapes[1]) {
+    //   console.log('======================')
+    //   console.log('shapes[0].y: ', shapes[0]?.y)
+    //   console.log('shapes[0].x: ', shapes[0]?.x)
+    //   console.log('----------------------')
+    //   console.log('shapes[1].y: ', shapes[1]?.y)
+    //   console.log('shapes[1].x: ', shapes[1]?.x)
+    // }
   }, [shapes])
 
   useEffect(() => {
+    console.log('shape.y: ', shape?.y)
     console.log('shape.x: ', shape?.x)
+    console.log('======================')
   }, [shape])
 
   useInterval(() => {
-    if (shape && (shape.y + shape.height) === dimensions.height - 1) {
-      setShapes((currentShapes) => [ ...currentShapes, shape ])
-      setShape(generateShape(dimensions))
-    } else {
-      setShape((currentShape): any => currentShape ? ({ ...currentShape, y: currentShape?.y + 1 }) : null)
-    }
+    setShapes((currentShapes) => {
+      const activeShape = currentShapes.filter(({ active }) => active)[0]
+      const bottomShapes = currentShapes.filter(({ active }) => !active)
+
+      const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height - 1
+
+      // const nextPos = { ...activeShape, y: activeShape.y + 1}
+
+      const hitsBlock = bottomShapes.length && bottomShapes.some((bottomShape) =>
+        bottomShape.blocks.some((bottomBlock) =>
+          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) === (bottomShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (bottomShape.y + bottomBlock.y))
+        )
+      )
+
+      if (hitsBottom || hitsBlock) {
+        return [ ...bottomShapes, { ...activeShape, active: false }, generateShape(dimensions)]
+      }
+
+      return [ ...bottomShapes, { ...activeShape, y: activeShape?.y + 1 }]
+    })
   }, 500)
 
   return (
@@ -81,17 +112,17 @@ export const Map = ({ style } : any) => {
           }}
         />
       )) }
-      { shape && shape.width ? (
+      { getActiveShape() ? (
         <Box s={{
           position: 'absolute',
-          left: `${shape.x}rem`,
-          top: `${shape.y}rem`,
-          height: shape.height + 'rem',
-          width: shape.width + 'rem'
+          left: `${getActiveShape().x}rem`,
+          top: `${getActiveShape().y}rem`,
+          height: getActiveShape().height + 'rem',
+          width: getActiveShape().width + 'rem'
         }}>
-          { shape.blocks.map((block: any, index: number) => (
+          { getActiveShape().blocks.map((block: any, index: number) => (
             <SMapBlock
-              color={shape.color}
+              color={getActiveShape().color}
               s={{
                 left: `${block.x}rem`,
                 top: `${block.y}rem`
@@ -100,7 +131,7 @@ export const Map = ({ style } : any) => {
           )) }
         </Box>
       ) : null }
-      { shapes.map((shape: any, index: number) => (
+      { getShapes().length && getShapes().map((shape: any, index: number) => (
         <Box s={{
           position: 'absolute',
           left: `${shape.x}rem`,

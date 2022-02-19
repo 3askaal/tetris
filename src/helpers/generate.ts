@@ -47,6 +47,7 @@ export interface Shape {
   height: number;
   x: number;
   y: number;
+  active: boolean;
 }
 
 export const generateShape = (dimensions: any) => {
@@ -57,6 +58,7 @@ export const generateShape = (dimensions: any) => {
     height: 0,
     x: 0,
     y: 2,
+    active: true
   };
 
   const amountPositions = 4 * 4
