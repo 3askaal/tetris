@@ -9,7 +9,7 @@ import { useSocket } from 'use-socketio'
 
 const LobbyView = () => {
   const params: any = useParams()
-  const { socket } = useSocket()
+  // const { socket } = useSocket()
   const { players, settings, setSettings, currentPlayer, getOpponents } = useContext(GameContext)
   const { joinRoom, startGame } = useContext(SocketContext)
 
@@ -19,9 +19,9 @@ const LobbyView = () => {
   useEffect(() => {
     setSettings({ type: 'online' })
 
-    if (params.roomId !== socket.id) {
-      joinRoom(params.roomId)
-    }
+    // if (params.roomId !== socket.id) {
+    //   joinRoom(params.roomId)
+    // }
 
   }, [])
 
@@ -57,7 +57,7 @@ const LobbyView = () => {
       return
     }
 
-    socket.emit('update:player', { name: currentPlayerName })
+    // socket.emit('update:player', { name: currentPlayerName })
   }
 
   const allPlayersHaveUsernames = () => players.every(({ name }: any) => name)

@@ -11,7 +11,7 @@ interface GameContextType {
 export const SocketContext = createContext<GameContextType>({})
 
 export const SocketProvider = ({ children }: any) => {
-  const { socket } = useSocket()
+  // const { socket } = useSocket()
   const {
     setRooms,
     setPlayers,
@@ -35,35 +35,35 @@ export const SocketProvider = ({ children }: any) => {
   useSocket('game:over', (args) => onGameOver(args))
 
   const joinRoom = (roomId: string) => {
-    socket.emit('room:join', { roomId })
+    // socket.emit('room:join', { roomId })
   }
 
   const leaveRoom = (roomId: string) => {
-    socket.emit('room:leave', { roomId })
+    // socket.emit('room:leave', { roomId })
   }
 
   const createRoom = (name: string) => {
-    socket.emit('room:create', { name })
+    // socket.emit('room:create', { name })
   }
 
   const startGame = () => {
-    socket.emit('start', {})
+    // socket.emit('start', {})
   }
 
   const bomb = (args: any) => {
     console.log(args)
-    socket.emit("bomb", args)
+    // socket.emit("bomb", args)
   }
 
   const move = (args: any) => {
     console.log(args)
-    socket.emit("move", args)
+    // socket.emit("move", args)
   }
 
   return (
     <SocketContext.Provider
       value={{
-        socket,
+        // socket,
         joinRoom,
         leaveRoom,
         createRoom,

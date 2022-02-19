@@ -56,13 +56,13 @@ const App = () => {
         <GlobalStyle />
         <LocalGlobalStyle />
         <Router history={history}>
-          <SocketIOProvider url={SOCKET_URL}>
+          {/* <SocketIOProvider url={SOCKET_URL}> */}
             <Switch>
               {/* <Route exact path="/">
                 <HomeView />
               </Route> */}
               <GameProvider>
-                <SocketProvider>
+                {/* <SocketProvider> */}
                   {/* <Route exact path="/setup">
                     <SetupView />
                   </Route>
@@ -75,10 +75,10 @@ const App = () => {
                   <Route exact path="/">
                     <PlayView />
                   </Route>
-                </SocketProvider>
+                {/* </SocketProvider> */}
               </GameProvider>
             </Switch>
-          </SocketIOProvider>
+          {/* </SocketIOProvider> */}
         </Router>
       </SApp>
     </ThemeProvider>

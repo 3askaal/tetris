@@ -1,4 +1,4 @@
-import { find, times, sampleSize, sample, random } from 'lodash'
+import { find, times, sampleSize, sample, random, minBy, maxBy } from 'lodash'
 import randomColor from 'randomcolor'
 
 export const generatePlayers = (players: any, blocks: any) => {
@@ -42,13 +42,15 @@ export const generateGrid = ({ height, width }: { height: number, width: number 
 
 interface Shape {
   color: string;
-  blocks: { x: number, y: number }[]
+  blocks: { x: number, y: number }[];
+  width?: number;
+  height?: number;
 }
 
 export const generateShape = () => {
   const shape: Shape = {
     color: randomColor(),
-    blocks: []
+    blocks: [],
   };
 
   const amountPositions = 4 * 4
@@ -81,6 +83,16 @@ export const generateShape = () => {
     }
   })
 
+  const minX = minBy(shape.blocks, 'x')?.x as number
+  const maxX = maxBy(shape.blocks, 'x')?.x as number
+  const minY = minBy(shape.blocks, 'y')?.y as number
+  const maxY = maxBy(shape.blocks, 'y')?.y as number
+
+  shape.blocks = shape.blocks.map((block) => ({ x: block.x - minX, y: block.y - minY }))
+
+  shape.width = (maxX - minX) + 1
+  shape.height = (maxY - minY) + 1
+
   return shape
 }
 
@@ -96,7 +108,6 @@ export const generateStones = (grid: any, height: number, width: number) => {
     const isRightRow = x === width - 1
 
     if (isTopRow || isBottomRow || isleftRow || isRightRow) {
-      console.log('test')
       newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], stone: true }}
       // return true
     }

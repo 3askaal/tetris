@@ -6,7 +6,7 @@ import { GameContext, SocketContext } from '../../context'
 
 const RoomsView = () => {
   const history = useHistory()
-  const { socket } = useSocket()
+  // const { socket } = useSocket()
   const { createRoom } = useContext(SocketContext)
   const { rooms } = useContext(GameContext)
   const [newRoomName, setNewRoomName] = useState('')
@@ -17,13 +17,9 @@ const RoomsView = () => {
   }
 
   function onCreate() {
-    history.push(`/rooms/${socket.id}`)
+    // history.push(`/rooms/${socket.id}`)
     createRoom(newRoomName)
   }
-
-  useEffect(() => {
-    console.log(socket)
-  }, [socket])
 
   return (
     <Wrapper s={{ padding: 'l' }}>

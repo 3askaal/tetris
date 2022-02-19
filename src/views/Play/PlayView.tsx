@@ -14,7 +14,6 @@ const PlayView = () => {
   const { roomId }: any = useParams();
   const history = useHistory();
   const {
-    socket,
     players,
     remainingTime,
     onStartGame,
