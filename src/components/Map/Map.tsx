@@ -86,7 +86,7 @@ export const Map = ({ style } : any) => {
 
       return [ ...bottomShapes, { ...activeShape, y: activeShape?.y + 1 }]
     })
-  }, 100)
+  }, 200)
 
   return (
     <SMap style={{style}} width={dimensions.width} height={dimensions.height}>
