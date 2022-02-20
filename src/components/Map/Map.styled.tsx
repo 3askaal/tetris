@@ -22,6 +22,7 @@ export const SMapBlock = s.div(({ theme, color = '#fff' }: any) => ({
   // Dark
   borderLeftColor: chroma(color).darken(1).hex(),
   borderBottomColor: chroma(color).darken(1).hex(),
+  transition: 'all .1s ease'
 }))
 
 // export const SMapCharacter = s.div(({ theme, color }: any) => ({

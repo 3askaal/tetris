@@ -11,14 +11,6 @@ export const Map = ({ style } : any) => {
   const [shape, setShape] = useState<Shape | null>(null)
   const [shapes, setShapes] = useState<Shape[]>([])
 
-  // const getBombs = () => {
-  //   return bombs ? Object.values(bombs).filter(({ bomb }: any) => bomb) : []
-  // }
-
-  // const getExplosions = () => {
-  //   return explosions ? Object.values(explosions).filter(({ explosion }: any) => explosion) : []
-  // }
-
   const getStones = () => {
     return grid ? Object.values(grid).filter(({ stone }: any) => stone) : []
   }
@@ -31,43 +23,46 @@ export const Map = ({ style } : any) => {
     return shapes.filter(({ active }) => !active)
   }
 
-  // const getBricks = () => {
-  //   return grid ? Object.values(grid).filter(({ brick }: any) => brick) : []
-  // }
-
-  // const getPlayers = () => {
-  //   return players
-  // }
-
-  // const getActivePlayers = () => {
-  //   return getPlayers().filter(({ health }: any) => health)
-  // }
-
-  // const getShape = () => {
-  //   return generateShape()
-  // }
-
   const move = (direction: 'left' | 'right') => {
     const movements =  {
       left: -1,
       right: 1
     }
 
-    const movement = movements[direction]
+    setShapes((currentShapes) => currentShapes.map((currentShape) => {
+      if (!currentShape.active) {
+        return currentShape
+      }
 
-    setShapes((currentShapes) => currentShapes.map((shape) => shape.active ? { ...shape, x: shape.x + movement } : shape))
+      const nextPos = currentShape.x + movements[direction]
+
+      if (nextPos > 0 && nextPos < dimensions.width - 2) {
+        return { ...currentShape, x: currentShape.x + movements[direction] }
+      }
+
+      return currentShape
+    }))
+  }
+
+  const drop = () => {
+    // setShapes((currentShapes) => currentShapes.map((shape) => shape.active ? { ...shape, x: shape.y = di8m } : shape))
+    const initialShapesLength = Number(shapes.length)
+
+    while (shapes.length) {
+      // currentShapesLength = Number(shapes.length)
+    }
   }
 
   useMousetrap('left', () => move('left'))
   useMousetrap('right', () => move('right'))
-  // useMousetrap('space', () => )
+  useMousetrap('space', () => drop())
 
   useEffect(() => {
     setShapes([generateShape(dimensions)])
     // setShapes((currentShapes): any => [generateShape()])
   }, [])
 
-  useInterval(() => {
+  const moveDown = () => {
     setShapes((currentShapes) => {
       const activeShape = currentShapes.filter(({ active }) => active)[0]
       const bottomShapes = currentShapes.filter(({ active }) => !active)
@@ -86,7 +81,9 @@ export const Map = ({ style } : any) => {
 
       return [ ...bottomShapes, { ...activeShape, y: activeShape?.y + 1 }]
     })
-  }, 200)
+  }
+
+  useInterval(moveDown, 200)
 
   return (
     <SMap style={{style}} width={dimensions.width} height={dimensions.height}>
