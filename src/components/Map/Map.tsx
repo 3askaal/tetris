@@ -45,11 +45,10 @@ export const Map = ({ style } : any) => {
   }
 
   const drop = () => {
-    // setShapes((currentShapes) => currentShapes.map((shape) => shape.active ? { ...shape, x: shape.y = di8m } : shape))
-    const initialShapesLength = Number(shapes.length)
+    let movedDown = false
 
-    while (shapes.length) {
-      // currentShapesLength = Number(shapes.length)
+    while (!movedDown) {
+      movedDown = moveDown()
     }
   }
 
@@ -63,24 +62,29 @@ export const Map = ({ style } : any) => {
   }, [])
 
   const moveDown = () => {
+    let movedDown = false
+
     setShapes((currentShapes) => {
       const activeShape = currentShapes.filter(({ active }) => active)[0]
-      const bottomShapes = currentShapes.filter(({ active }) => !active)
+      const inactiveShapes = currentShapes.filter(({ active }) => !active)
 
       const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height - 1
 
-      const hitsBlock = bottomShapes.length && bottomShapes.some((bottomShape) =>
-        bottomShape.blocks.some((bottomBlock) =>
-          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) === (bottomShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (bottomShape.y + bottomBlock.y))
+      const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
+        inactiveShape.blocks.some((bottomBlock) =>
+          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) === (inactiveShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + bottomBlock.y))
         )
       )
 
       if (hitsBottom || hitsBlock) {
-        return [ ...bottomShapes, { ...activeShape, active: false }, generateShape(dimensions)]
+        movedDown = true
+        return [ ...inactiveShapes, { ...activeShape, active: false }, generateShape(dimensions)]
       }
 
-      return [ ...bottomShapes, { ...activeShape, y: activeShape?.y + 1 }]
+      return [ ...inactiveShapes, { ...activeShape, y: activeShape?.y + 1 }]
     })
+
+    return movedDown
   }
 
   useInterval(moveDown, 200)
