@@ -61,9 +61,7 @@ export const generateShape = (dimensions: any) => {
     active: true
   };
 
-  const amountPositions = 4 * 4
-
-  const amountFilledPositions = random(2, amountPositions / 2)
+  const amountBlocksInShape = 4
 
   const startingPoints = [{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 4, y: 0 }, { x: 4, y: 4 }]
   const possibleMovements = [{ x: 1, y: 1 } , { x: 1, y: -1 }, { x: -1, y: 1 }, { x: -1, y: -1 }];
@@ -73,7 +71,7 @@ export const generateShape = (dimensions: any) => {
   const startingPoint = startingPoints[cornerIndex]
   const possibleMovement = possibleMovements[cornerIndex]
 
-  times(amountFilledPositions, (i) => {
+  times(amountBlocksInShape, (i) => {
     if (i === 0) {
       shape.blocks.push(startingPoint)
     } else {
@@ -84,7 +82,7 @@ export const generateShape = (dimensions: any) => {
         nextBlock = { ...sample(shape.blocks) }
         const randomDirection = sample(['x', 'y']) as 'x' | 'y'
         nextBlock[randomDirection] += possibleMovement[randomDirection]
-        blockExists = find(shape, { ...nextBlock })
+        blockExists = find(shape.blocks, { ...nextBlock })
       }
 
       shape.blocks.push(nextBlock)

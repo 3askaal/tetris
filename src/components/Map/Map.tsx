@@ -4,6 +4,7 @@ import { SMap, SMapBlock } from './Map.styled'
 import { GameContext } from '../../context'
 import { generateShape, Shape } from '../../helpers/generate'
 import { useInterval } from '../../helpers/interval'
+import useMousetrap from 'react-hook-mousetrap'
 
 export const Map = ({ style } : any) => {
   const { dimensions, grid, bombs, explosions, players }: any = useContext(GameContext)
@@ -46,27 +47,25 @@ export const Map = ({ style } : any) => {
   //   return generateShape()
   // }
 
+  const move = (direction: 'left' | 'right') => {
+    const movements =  {
+      left: -1,
+      right: 1
+    }
+
+    const movement = movements[direction]
+
+    setShapes((currentShapes) => currentShapes.map((shape) => shape.active ? { ...shape, x: shape.x + movement } : shape))
+  }
+
+  useMousetrap('left', () => move('left'))
+  useMousetrap('right', () => move('right'))
+  // useMousetrap('space', () => )
+
   useEffect(() => {
     setShapes([generateShape(dimensions)])
     // setShapes((currentShapes): any => [generateShape()])
   }, [])
-
-  useEffect(() => {
-    // if (shapes[1]) {
-    //   console.log('======================')
-    //   console.log('shapes[0].y: ', shapes[0]?.y)
-    //   console.log('shapes[0].x: ', shapes[0]?.x)
-    //   console.log('----------------------')
-    //   console.log('shapes[1].y: ', shapes[1]?.y)
-    //   console.log('shapes[1].x: ', shapes[1]?.x)
-    // }
-  }, [shapes])
-
-  useEffect(() => {
-    console.log('shape.y: ', shape?.y)
-    console.log('shape.x: ', shape?.x)
-    console.log('======================')
-  }, [shape])
 
   useInterval(() => {
     setShapes((currentShapes) => {
@@ -87,7 +86,7 @@ export const Map = ({ style } : any) => {
 
       return [ ...bottomShapes, { ...activeShape, y: activeShape?.y + 1 }]
     })
-  }, 500)
+  }, 100)
 
   return (
     <SMap style={{style}} width={dimensions.width} height={dimensions.height}>
