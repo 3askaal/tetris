@@ -6,11 +6,11 @@ import { useInterval } from '../helpers/interval';
 import { generateDamage } from '../helpers/actions';
 import { Socket } from 'socket.io-client';
 import { IBomb, IExplosion, IGrid, IPlayer, ISettings } from '../types';
-import { generateGrid, generatePlayers } from '../helpers/generate';
+import { generateGrid, generatePlayers, generateShape, Shape } from '../helpers/generate';
 
 interface GameContextType {
   socket?: Socket;
-
+  shapes?: Shape[];
   dimensions?: { height: number, width: number };
   grid?: IGrid;
   bombs?: IBomb;
@@ -18,7 +18,6 @@ interface GameContextType {
   players: IPlayer[];
   settings: ISettings;
   remainingTime?: number;
-
   getOpponents?: any;
   getCurrentPlayer?: any;
 
@@ -44,8 +43,7 @@ interface BombActionPayload {
 }
 
 export const GameProvider = ({ children }: any) => {
-  const history = useHistory()
-  // const { socket } = useSocket()
+  const [shapes, setShapes] = useState<Shape[]>([])
   const [players, setPlayers] = useState<IPlayer[]>([])
   const [currentPlayer, setCurrentPlayer] = useState<IPlayer>()
   const [rooms, setRooms] = useState<any>([])
@@ -79,75 +77,98 @@ export const GameProvider = ({ children }: any) => {
 
   }
 
-  function onGameMove ({ playerIndex, direction, movement }: MoveActionPayload) {
-    const newPlayer = { ...players[playerIndex] }
-
-    newPlayer[direction] += movement
-
-    const positionIsOutOfMap = newPlayer.x > dimensions.width || newPlayer.x < 0 || newPlayer.y > dimensions.height || newPlayer.y < 0
-
-    if (positionIsOutOfMap) {
-      return;
+  const moveX = (direction: 'left' | 'right') => {
+    const movements =  {
+      left: -1,
+      right: 1
     }
 
-    const positionIsReserved = Object.values(grid)
-      .find(({ x, y, stone, brick }: any) =>
-        (x === newPlayer.x && y === newPlayer.y) &&
-        (stone || brick))
-
-    if (positionIsReserved) {
-      return
-    }
-
-    setPlayers((currentPlayers: any) => currentPlayers.map((player: any, index: number) => ({
-      ...player,
-      ...index === playerIndex && {
-        x: newPlayer.x,
-        y: newPlayer.y,
+    setShapes((currentShapes) => currentShapes.map((currentShape) => {
+      if (!currentShape.active) {
+        return currentShape
       }
-    })))
+
+      const nextPosStart = currentShape.x + movements[direction]
+      const nextPosEnd = currentShape.x + currentShape.width + movements[direction]
+      const hitsSide = nextPosStart === 0 || nextPosEnd === dimensions.width
+
+      if (hitsSide) {
+        return currentShape
+      }
+
+      const activeShape = currentShapes.filter(({ active }) => active)[0]
+      const inactiveShapes = currentShapes.filter(({ active }) => !active)
+
+      const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
+        inactiveShape.blocks.some((bottomBlock) =>
+          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) + movements[direction] === (inactiveShape.x + bottomBlock.x) && (activeShape.y + activeBlock.y) === (inactiveShape.y + bottomBlock.y))
+        )
+      )
+
+      if (hitsBlock) {
+        return currentShape
+      }
+
+      return { ...currentShape, x: currentShape.x + movements[direction] }
+    }))
   }
 
-  function onGameBomb ({ playerIndex }: BombActionPayload) {
-    const { damagePositions, newGrid, explosion, resetExplosion, bomb, resetBomb } = generateDamage(grid, players, playerIndex)
+  const moveY = () => {
+    let isHit = false
 
-    setBombs((currentBombs: any) => ({ ...currentBombs, ...bomb }))
+    setShapes((currentShapes) => {
+      const activeShape = currentShapes.filter(({ active }) => active)[0]
+      const inactiveShapes = currentShapes.filter(({ active }) => !active)
 
-    setTimeout(() => {
-      setBombs((currentBombs: any) => ({ ...currentBombs, ...resetBomb }))
-      setGrid((currentGrid: any) => ({ ...currentGrid, ...newGrid }))
+      const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height - 1
 
-      setPlayers((currentPlayers: any) => {
-        return currentPlayers.map((player: any) => ({
-          ...player,
-          ...damagePositions.some(({ x, y }) => player.x === x && player.y === y) && ({
-            health: player.health - 20
-          })
+      const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
+        inactiveShape.blocks.some((bottomBlock) =>
+          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) === (inactiveShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + bottomBlock.y))
+        )
+      )
+
+      if (hitsBottom || hitsBlock) {
+        isHit = true
+        return [ ...inactiveShapes, { ...activeShape, active: false }, generateShape(dimensions)]
+      }
+
+      return [ ...inactiveShapes, { ...activeShape, y: activeShape?.y + 1 }]
+    })
+
+    return isHit
+  }
+
+  const drop = () => {
+    let isHit = false
+
+    while (!isHit) {
+      isHit = moveY()
+    }
+  }
+
+  const rotate = () => {
+    setShapes((currentShapes) => currentShapes.map((currentShape) => {
+      if (!currentShape.active) {
+        return currentShape
+      }
+
+      return {
+        ...currentShape,
+        width: currentShape.height,
+        height: currentShape.width,
+        rotated: !currentShape.rotated,
+        blocks: currentShape.blocks.map((block) => ({
+          x: (currentShape.height - 1) - block.y,
+          y: block.x
         }))
-      })
-
-      setExplosions((currentExplosions: any) => ({ ...currentExplosions, ...explosion }))
-    }, 3000)
-
-    setTimeout(() => {
-      setExplosions((currentExplosions: any) => ({ ...currentExplosions, ...resetExplosion }))
-    }, 3500)
+      }
+    }))
   }
 
   useInterval(() => {
     setRemainingTime(remainingTime - 1000)
   }, remainingTime ? 1000 : null)
-
-
-  // const getOpponents = (): any[] => players.filter(({ socketId }: any) => socketId !== socket.id)
-
-  // useEffect(() => {
-  //   setCurrentPlayer(players.find(({ socketId }: any) => socketId === socket.id) as IPlayer)
-  // }, [players])
-
-  // const getActivePlayers = (): any[] => {
-  //   return [...(players || [])].sort((a: any, b: any) => b.health - a.health).filter(({ health }: any) => health > 0)
-  // }
 
   const gameOver = () => !remainingTime
 
@@ -162,8 +183,6 @@ export const GameProvider = ({ children }: any) => {
         setRooms,
         onStartGame,
         onGameOver,
-        onGameMove,
-        onGameBomb,
         players,
         setPlayers,
         settings,
@@ -181,7 +200,12 @@ export const GameProvider = ({ children }: any) => {
         setExplosions,
         // getActivePlayers,
         gameOver,
-        // getWinner,
+        shapes,
+        setShapes,
+        moveX,
+        moveY,
+        drop,
+        rotate,
       }}
     >
       {children}
