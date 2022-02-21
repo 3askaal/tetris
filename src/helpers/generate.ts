@@ -48,6 +48,7 @@ export interface Shape {
   x: number;
   y: number;
   active: boolean;
+  rotated: boolean;
 }
 
 export const generateShape = (dimensions: any) => {
@@ -58,6 +59,7 @@ export const generateShape = (dimensions: any) => {
     height: 0,
     x: 0,
     y: 2,
+    rotated: false,
     active: true
   };
 
@@ -116,10 +118,7 @@ export const generateStones = (grid: any, height: number, width: number) => {
 
     if (isTopRow || isBottomRow || isleftRow || isRightRow) {
       newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], stone: true }}
-      // return true
     }
-
-    // return false
   })
 
   return newGrid

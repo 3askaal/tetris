@@ -3,12 +3,11 @@ import { Box } from '3oilerplate'
 import { SMap, SMapBlock } from './Map.styled'
 import { GameContext } from '../../context'
 import { generateShape, Shape } from '../../helpers/generate'
-import { useInterval } from '../../helpers/interval'
 import useMousetrap from 'react-hook-mousetrap'
+import { useInterval } from '../../helpers/interval'
 
 export const Map = ({ style } : any) => {
-  const { dimensions, grid, bombs, explosions, players }: any = useContext(GameContext)
-  const [shape, setShape] = useState<Shape | null>(null)
+  const { dimensions, grid }: any = useContext(GameContext)
   const [shapes, setShapes] = useState<Shape[]>([])
 
   const getStones = () => {
@@ -34,9 +33,10 @@ export const Map = ({ style } : any) => {
         return currentShape
       }
 
-      const nextPos = currentShape.x + movements[direction]
+      const nextPosStart = currentShape.x + movements[direction]
+      const nextPosEnd = currentShape.x + currentShape.width + movements[direction]
 
-      if (nextPos > 0 && nextPos < dimensions.width - 2) {
+      if (nextPosStart > 0 && nextPosEnd < dimensions.width) {
         return { ...currentShape, x: currentShape.x + movements[direction] }
       }
 
@@ -52,9 +52,29 @@ export const Map = ({ style } : any) => {
     }
   }
 
+  const rotate = () => {
+    setShapes((currentShapes) => currentShapes.map((currentShape) => {
+      if (!currentShape.active) {
+        return currentShape
+      }
+
+      return {
+        ...currentShape,
+        width: currentShape.height,
+        height: currentShape.width,
+        rotated: !currentShape.rotated,
+        blocks: currentShape.blocks.map((block) => ({
+          x: (currentShape.height - 1) - block.y,
+          y: block.x
+        }))
+      }
+    }))
+  }
+
   useMousetrap('left', () => move('left'))
   useMousetrap('right', () => move('right'))
   useMousetrap('space', () => drop())
+  useMousetrap('shift', () => rotate())
 
   useEffect(() => {
     setShapes([generateShape(dimensions)])
