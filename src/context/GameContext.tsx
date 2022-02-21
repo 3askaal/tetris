@@ -1,16 +1,14 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { useSocket } from "use-socketio";
-import { useHistory } from 'react-router-dom'
 import ReactGA4 from 'react-ga4'
+import { groupBy, includes } from 'lodash'
 import { useInterval } from '../helpers/interval';
-import { generateDamage } from '../helpers/actions';
 import { Socket } from 'socket.io-client';
 import { IBomb, IExplosion, IGrid, IPlayer, ISettings } from '../types';
-import { generateGrid, generatePlayers, generateShape, Shape } from '../helpers/generate';
+import { generateGrid, generateShape, Shape } from '../helpers/generate';
 
 interface GameContextType {
   socket?: Socket;
-  shapes?: Shape[];
+  shapes: Shape[];
   dimensions?: { height: number, width: number };
   grid?: IGrid;
   bombs?: IBomb;
@@ -29,7 +27,8 @@ export const GameContext = createContext<GameContextType>({
   settings: {
     type: 'local'
   },
-  players: []
+  players: [],
+  shapes: []
 })
 
 interface MoveActionPayload {
@@ -123,8 +122,8 @@ export const GameProvider = ({ children }: any) => {
       const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height - 1
 
       const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
-        inactiveShape.blocks.some((bottomBlock) =>
-          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) === (inactiveShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + bottomBlock.y))
+        inactiveShape?.blocks?.some((bottomBlock) =>
+          activeShape?.blocks?.some((activeBlock) => (activeShape.x + activeBlock.x) === (inactiveShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + bottomBlock.y))
         )
       )
 
@@ -164,6 +163,42 @@ export const GameProvider = ({ children }: any) => {
         }))
       }
     }))
+  }
+
+  useEffect(() => {
+    cleanupRow()
+  }, [shapes.length])
+
+  const cleanupRow = () => {
+    setShapes((currentShapes) => {
+      const inactiveShapes = currentShapes.filter(({ active }) => !active)
+
+      const inactiveBlocks = inactiveShapes.map(
+        ({ x, y, blocks }) => blocks?.map(
+          (block) => ({ ...block, x: block.x + x, y: block.y + y })
+        )
+      ).flat()
+
+      const inactiveRows = groupBy(inactiveBlocks, 'y')
+
+      const fullRows = Object.entries(inactiveRows)
+        .filter(([index, inactiveRow]) => inactiveRow.length === (dimensions.width - 2) && index)
+        .map(([index]) => Number(index))
+
+      if (!fullRows.length) {
+        return currentShapes
+      }
+
+      return currentShapes.map((currentShape) => {
+        return {
+          ...currentShape,
+          y: currentShape.y + 1,
+          blocks: currentShape.blocks.filter((inactiveBlock) => {
+            return !includes(fullRows, currentShape.y + inactiveBlock.y)
+          })
+        }
+      })
+    })
   }
 
   useInterval(() => {

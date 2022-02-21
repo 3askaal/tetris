@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react'
 import { Box } from '3oilerplate'
+import { groupBy } from 'lodash'
 import { SMap, SMapBlock } from './Map.styled'
 import { GameContext } from '../../context'
-import { generateShape } from '../../helpers/generate'
+import { generateShape, Shape } from '../../helpers/generate'
 import useMousetrap from 'react-hook-mousetrap'
 import { useInterval } from '../../helpers/interval'
 
@@ -19,7 +20,7 @@ export const Map = ({ style } : any) => {
   }
 
   const getShapes = () => {
-    return shapes?.filter(({ active }) => !active)
+    return shapes && shapes.length ? shapes.filter(({ active }) => !active) : []
   }
 
   useMousetrap('left', () => moveX('left'))
