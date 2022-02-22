@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { Box, Text, Spacer } from '3oilerplate'
 import { SPlayerDetails, SPlayerDetailsMove, SPlayerDetailsMiddle, SPlayerDetailsButton, SPlayerDetailsHealth, SPlayerDetailsHealthProgress } from './PlayerDetails.styled'
 import {
@@ -9,9 +9,37 @@ import {
 } from 'react-feather'
 import isMobile from 'is-mobile'
 import { GameContext } from '../../context'
+import { useButton } from '@react-aria/button'
+
+const Button = (props: any) => {
+  let ref = useRef<any>();
+  let { buttonProps } = useButton(props, ref);
+  let { children } = props;
+
+  return (
+    <SPlayerDetailsButton
+      { ...buttonProps }
+      ref={ref}
+      // onTouchStart={() => onDrop()}
+      // onClick={() => useDrop(drop)}
+      // {...isMobile() ? {
+      //   onTouchStart: () => onDrop()
+      // } : {
+      //   onMouseDown: () => onDrop()
+      // }}
+      s={{
+        // touchAction: isMobile() ? 'auto' : 'none',
+      }}
+    >
+      <ArrowDown />
+    </SPlayerDetailsButton>
+  );
+}
 
 export const PlayerDetails = ({ s }: any) => {
   const { moveX, drop, rotate } = useContext(GameContext)
+  let ref = useRef<any>();
+  let { buttonProps } = useButton({}, ref);
 
   return (
     <SPlayerDetails s={s}>
@@ -34,9 +62,10 @@ export const PlayerDetails = ({ s }: any) => {
         >
           <ChevronLeft />
         </SPlayerDetailsButton>
-        <SPlayerDetailsButton
+        <Button
+          onPress={() => drop()}
           // onTouchStart={() => onDrop()}
-          onClick={() => drop()}
+          // onClick={() => useDrop(drop)}
           // {...isMobile() ? {
           //   onTouchStart: () => onDrop()
           // } : {
@@ -45,9 +74,7 @@ export const PlayerDetails = ({ s }: any) => {
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
-        >
-          <ArrowDown />
-        </SPlayerDetailsButton>
+        />
         <SPlayerDetailsButton
           {...isMobile() ? {
             onTouchStart: () => rotate()

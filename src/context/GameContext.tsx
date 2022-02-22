@@ -144,12 +144,9 @@ export const GameProvider = ({ children }: any) => {
 
   const drop = () => {
     let isHit = false
-    let index = 0
 
-    while (!isHit && index < dimensions.height) {
-      console.log('check')
+    while (!isHit) {
       isHit = moveY()
-      index++
     }
   }
 

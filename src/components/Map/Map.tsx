@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { Box } from '3oilerplate'
 import { SMap, SMapBlock } from './Map.styled'
 import { GameContext } from '../../context'
@@ -78,8 +78,7 @@ export const Map = ({ style } : any) => {
             left: `${shape.x}rem`,
             top: `${shape.y}rem`,
             height: shape.height + 'rem',
-            width: shape.width + 'rem',
-            border: `1px solid ${shape.color}`
+            width: shape.width + 'rem'
           }}
         >
           { shape.blocks.map((block: any, index: number) => (
