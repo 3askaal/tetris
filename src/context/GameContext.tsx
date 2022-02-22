@@ -89,7 +89,7 @@ export const GameProvider = ({ children }: any) => {
 
       const nextPosStart = currentShape.x + movements[direction]
       const nextPosEnd = currentShape.x + currentShape.width + movements[direction]
-      const hitsSide = nextPosStart === 0 || nextPosEnd === dimensions.width
+      const hitsSide = nextPosStart < 1 || nextPosEnd > dimensions.width - 1
 
       if (hitsSide) {
         return currentShape
@@ -152,7 +152,9 @@ export const GameProvider = ({ children }: any) => {
         return currentShape
       }
 
-      return {
+
+
+      const rotatedShape = {
         ...currentShape,
         width: currentShape.height,
         height: currentShape.width,
@@ -162,6 +164,19 @@ export const GameProvider = ({ children }: any) => {
           y: block.x
         }))
       }
+
+      const shapeStart = rotatedShape.x
+      const shapeEnd = rotatedShape.x + rotatedShape.width
+
+      if (shapeStart < 1) {
+        rotatedShape.x += 1
+      }
+
+      if (shapeEnd > dimensions.width - 1) {
+        rotatedShape.x -= 1
+      }
+
+      return rotatedShape
     }))
   }
 
