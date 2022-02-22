@@ -152,8 +152,6 @@ export const GameProvider = ({ children }: any) => {
         return currentShape
       }
 
-
-
       const rotatedShape = {
         ...currentShape,
         width: currentShape.height,
