@@ -1,16 +1,14 @@
 import React from 'react'
-import { SocketIOProvider } from "use-socketio";
 import { Router, Switch, Route } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import { ThemeProvider } from 'styled-components'
 import ReactGA from 'react-ga4'
 import { GlobalStyle, theme } from '3oilerplate'
-import { GameProvider, SocketProvider } from '../context'
+import { GameProvider } from '../context'
 import { PlayView } from '../views'
 import { LocalGlobalStyle, fonts, colors } from '../style'
 import { SApp } from './App.styled'
 import './fonts.css'
-import { SOCKET_URL } from '../constants';
 
 export const history = createBrowserHistory()
 

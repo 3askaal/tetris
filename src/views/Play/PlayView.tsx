@@ -5,7 +5,6 @@ import { PlayerDetails, Map } from '../../components'
 import { GameContext } from '../../context'
 import ReactGA4 from 'react-ga4'
 import faker from 'faker'
-import { Timer } from '../../components/Timer/Timer'
 import { useKeyboardBindings } from '../../helpers/keyboard'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 
@@ -59,6 +58,7 @@ const PlayView = () => {
     <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
       <Container s={{ alignItems: 'center', pt: '4rem' }}>
         <Map />
+        <PlayerDetails s={{ pt: 'm' }} />
       </Container>
       {/* { gameOver() && (
         <Popup

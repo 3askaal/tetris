@@ -26,11 +26,11 @@ export const generatePlayers = (players: any, blocks: any) => {
 
 export const generateGrid = ({ height, width }: { height: number, width: number }) => {
   let newGrid: any = {}
-  const amountPositions = height * width
+  const amountPositions = height * width + 4
 
   times(amountPositions, (i) => {
-    const y = (i - (i % width)) / height * 2
-    const x = i % width
+    const y = (i - (i % (width + 2))) / (height + 2) * 2
+    const x = i % (width + 2)
 
     newGrid[`${x}/${y}`] = { x, y }
   })
@@ -42,7 +42,7 @@ export const generateGrid = ({ height, width }: { height: number, width: number 
 
 export interface Shape {
   color: string;
-  blocks: { x: number, y: number }[];
+  blocks: { x: number, y: number, dead?: boolean }[];
   width: number;
   height: number;
   x: number;

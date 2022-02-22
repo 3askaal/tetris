@@ -30,9 +30,10 @@ export const SPlayerDetailsButton = s.button(({ theme, type, color }: any) => ({
   alignItems: 'center',
   justifyContent: 'center',
   height: ['1.8rem', '2.6rem'],
-  backgroundColor: color,
-  border: '.125rem solid ' + theme.colors.background,
-  borderRadius: '.25rem',
+  backgroundColor: 'backgroundLight',
+  border: 'transparent',
+  margin: '.25rem',
+  borderRadius: '.125rem',
   color: 'white',
   flexBasis: '33.33%',
   cursor: 'pointer',
@@ -46,7 +47,7 @@ export const SPlayerDetailsButton = s.button(({ theme, type, color }: any) => ({
   }),
 
   'svg': {
-    strokeWidth: 5,
+    strokeWidth: 3,
     stroke: 'white'
   }
 }))
