@@ -1,10 +1,9 @@
 import React, { createContext, useState } from 'react'
 import ReactGA4 from 'react-ga4'
-import { groupBy, includes, minBy, maxBy, sum } from 'lodash'
-import { useInterval } from '../helpers/interval';
+import { groupBy, includes, sum } from 'lodash'
 import { Socket } from 'socket.io-client';
 import { IBomb, IExplosion, IGrid, IPlayer, ISettings } from '../types';
-import { generateGrid, generateShape, Shape } from '../helpers/generate';
+import { generateShape, Shape } from '../helpers/generate';
 
 interface GameContextType {
   socket?: Socket;
@@ -50,30 +49,17 @@ export const GameProvider = ({ children }: any) => {
   const [remainingTime, setRemainingTime] = useState<number>(1000)
   const [dimensions] = useState({ height: 36, width: 20 })
   const [grid, setGrid] = useState<any>({})
-  const [bombs, setBombs] = useState<any>(null)
-  const [explosions, setExplosions] = useState<any>(null)
+  const [gameOver, setGameOver] = useState(false)
 
-  const onStartGame = (args: any, restart?: boolean) => {
-    // initialize data
-    const { grid: newGrid, players: newPlayers, time: remainingTime } = args || {}
-    setGrid(newGrid || generateGrid(dimensions))
-    // setPlayers((currentPlayers) => newPlayers || generatePlayers(currentPlayers, dimensions))
-    setRemainingTime(remainingTime || 3 * 60 * 1000)
-
-    if (!restart) {
-      // navigate to play view
-      // history.push('/play')
-    }
+  const onStartGame = (args: any) => {
+    setGameOver(false)
+    setShapes([generateShape(dimensions)])
 
     ReactGA4.event({
       category: "actions",
       action: "game:start",
       label: players.map(({ name }: any) => name).join(' vs. '),
     });
-  }
-
-  const onGameOver = (args: any) => {
-
   }
 
   const moveX = (direction: 'left' | 'right') => {
@@ -99,8 +85,8 @@ export const GameProvider = ({ children }: any) => {
       const inactiveShapes = currentShapes.filter(({ active }) => !active)
 
       const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
-        inactiveShape.blocks.some((bottomBlock) =>
-          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) + movements[direction] === (inactiveShape.x + bottomBlock.x) && (activeShape.y + activeBlock.y) === (inactiveShape.y + bottomBlock.y))
+        inactiveShape.blocks.some((inactiveBlock) =>
+          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) + movements[direction] === (inactiveShape.x + inactiveBlock.x) && (activeShape.y + activeBlock.y) === (inactiveShape.y + inactiveBlock.y))
         )
       )
 
@@ -112,8 +98,9 @@ export const GameProvider = ({ children }: any) => {
     }))
   }
 
-  function moveY () {
+  const moveY = () => {
     let isHit = false
+    let isGameOver = false
 
     setShapes((currentShapes) => {
       const activeShape = currentShapes.filter(({ active }) => active)[0]
@@ -122,13 +109,23 @@ export const GameProvider = ({ children }: any) => {
       const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height
 
       const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
-        inactiveShape?.blocks?.some((bottomBlock) =>
-          activeShape?.blocks?.some((activeBlock) => (activeShape.x + activeBlock.x) === (inactiveShape.x + bottomBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + bottomBlock.y))
+        inactiveShape?.blocks?.some((inactiveBlock) =>
+          activeShape?.blocks?.some((activeBlock) => {
+            const isHit = (activeShape.x + activeBlock.x) === (inactiveShape.x + inactiveBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + inactiveBlock.y)
+            const isGameOver = isHit && activeShape.y + activeBlock.y < 3
+
+            if (isGameOver) {
+              setGameOver(true)
+            }
+
+            return isHit
+          })
         )
       )
 
       if (hitsBottom || hitsBlock) {
         isHit = true
+        isGameOver = activeShape.y === 2
         return [ ...inactiveShapes, { ...activeShape, active: false }, generateShape(dimensions)]
       }
 
@@ -137,6 +134,10 @@ export const GameProvider = ({ children }: any) => {
 
     if (isHit) {
       cleanupRow()
+    }
+
+    if (isGameOver) {
+      setGameOver(true)
     }
 
     return isHit
@@ -238,23 +239,12 @@ export const GameProvider = ({ children }: any) => {
     })
   }
 
-  useInterval(() => {
-    setRemainingTime(remainingTime - 1000)
-  }, remainingTime ? 1000 : null)
-
-  const gameOver = () => !remainingTime
-
-  // const getWinner = (): any => {
-  //   return gameOver() ? getActivePlayers()[0] : false
-  // }
-
   return (
     <GameContext.Provider
       value={{
         rooms,
         setRooms,
         onStartGame,
-        onGameOver,
         players,
         setPlayers,
         settings,
@@ -265,10 +255,6 @@ export const GameProvider = ({ children }: any) => {
         dimensions,
         grid,
         setGrid,
-        bombs,
-        setBombs,
-        explosions,
-        setExplosions,
         gameOver,
         shapes,
         setShapes,

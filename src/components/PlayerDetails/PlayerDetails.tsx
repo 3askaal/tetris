@@ -50,11 +50,6 @@ export const PlayerDetails = ({ s }: any) => {
       }}>
         <PlayerDetailsButton
           onPress={() => moveX('left')}
-          // {...isMobile() ? {
-          //   onTouchStart: () => moveX('left')
-          // } : {
-          //   onMouseDown: () => moveX('left')
-          // }}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
@@ -63,13 +58,6 @@ export const PlayerDetails = ({ s }: any) => {
         </PlayerDetailsButton>
         <PlayerDetailsButton
           onPress={() => drop()}
-          // onTouchStart={() => onDrop()}
-          // onClick={() => useDrop(drop)}
-          // {...isMobile() ? {
-          //   onTouchStart: () => onDrop()
-          // } : {
-          //   onMouseDown: () => onDrop()
-          // }}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
@@ -78,11 +66,6 @@ export const PlayerDetails = ({ s }: any) => {
         </PlayerDetailsButton>
         <PlayerDetailsButton
           onPress={() => rotate()}
-          // {...isMobile() ? {
-          //   onTouchStart: () => rotate()
-          // } : {
-          //   onMouseDown: () => rotate()
-          // }}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
@@ -91,11 +74,6 @@ export const PlayerDetails = ({ s }: any) => {
         </PlayerDetailsButton>
         <PlayerDetailsButton
           onPress={() => moveX('right')}
-          // {...isMobile() ? {
-          //   onTouchStart: () => moveX('right')
-          // } : {
-          //   onMouseDown: () => moveX('right')
-          // }}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
