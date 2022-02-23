@@ -12,7 +12,7 @@ export const SPlayerDetailsMove = s.div(({ theme }: any) => ({
   display: 'flex',
   position: 'relative',
   justifyContent: 'center',
-  flexBasis: '60%',
+  flexBasis: '80%',
 
   '> *': {
     flexBasis: '35%'
@@ -29,24 +29,24 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type }: any) =
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: ['1.8rem', '2.6rem'],
-  backgroundColor: 'backgroundLight',
-  border: 'transparent',
+  height: ['2rem', '3rem'],
+  // backgroundColor: 'backgroundLight',
+  // border: 'transparent',
   margin: '.25rem',
-  borderRadius: '.125rem',
+  // borderRadius: '.125rem',
   color: 'white',
-  flexBasis: '33.33%',
+  flexBasis: '50%',
   cursor: 'pointer',
+  backgroundColor: brighten('#000', .6),
+  border: '.15rem solid',
+  borderRadius: '.25rem',
+  borderLeftColor: brighten('#000', .2),
+  borderBottomColor: brighten('#000', .2),
+  borderTopColor: brighten('#000', .4),
+  borderRightColor: brighten('#000', .4),
+  boxShadow: '0 0 5px 0 rgba(0, 0, 0, 0.25)',
 
   ...isDesktop && ({
-    backgroundColor: brighten('#000', .6),
-    border: '.15rem solid',
-    borderRadius: '.25rem',
-    borderLeftColor: brighten('#000', .2),
-    borderBottomColor: brighten('#000', .2),
-    borderTopColor: brighten('#000', .4),
-    borderRightColor: brighten('#000', .4),
-    boxShadow: '0 0 5px 0 rgba(0, 0, 0, 0.25)',
     paddingX: 's',
 
     ...type === 'SPACE' && ({
