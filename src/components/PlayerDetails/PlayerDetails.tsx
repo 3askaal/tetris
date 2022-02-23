@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react'
-import { Box, Text, Spacer } from '3oilerplate'
-import { SPlayerDetails, SPlayerDetailsMove, SPlayerDetailsMiddle, SPlayerDetailsButton, SPlayerDetailsHealth, SPlayerDetailsHealthProgress } from './PlayerDetails.styled'
+import { Box } from '3oilerplate'
+import { SPlayerDetails, SPlayerDetailsButton } from './PlayerDetails.styled'
 import {
   ChevronLeft,
   ChevronRight,
@@ -11,7 +11,7 @@ import isMobile from 'is-mobile'
 import { GameContext } from '../../context'
 import { useButton } from '@react-aria/button'
 
-const Button = (props: any) => {
+const PlayerDetailsButton = (props: any) => {
   let ref = useRef<any>();
   let { buttonProps } = useButton(props, ref);
   let { children } = props;
@@ -31,15 +31,13 @@ const Button = (props: any) => {
         // touchAction: isMobile() ? 'auto' : 'none',
       }}
     >
-      <ArrowDown />
+      { children }
     </SPlayerDetailsButton>
   );
 }
 
 export const PlayerDetails = ({ s }: any) => {
   const { moveX, drop, rotate } = useContext(GameContext)
-  let ref = useRef<any>();
-  let { buttonProps } = useButton({}, ref);
 
   return (
     <SPlayerDetails s={s}>
@@ -50,19 +48,20 @@ export const PlayerDetails = ({ s }: any) => {
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        <SPlayerDetailsButton
-          {...isMobile() ? {
-            onTouchStart: () => moveX('left')
-          } : {
-            onMouseDown: () => moveX('left')
-          }}
+        <PlayerDetailsButton
+          onPress={() => moveX('left')}
+          // {...isMobile() ? {
+          //   onTouchStart: () => moveX('left')
+          // } : {
+          //   onMouseDown: () => moveX('left')
+          // }}
           s={{
-            touchAction: isMobile() ? 'auto' : 'none',
+            // touchAction: isMobile() ? 'auto' : 'none',
           }}
         >
-          <ChevronLeft />
-        </SPlayerDetailsButton>
-        <Button
+          <ChevronLeft size={14} />
+        </PlayerDetailsButton>
+        <PlayerDetailsButton
           onPress={() => drop()}
           // onTouchStart={() => onDrop()}
           // onClick={() => useDrop(drop)}
@@ -74,31 +73,35 @@ export const PlayerDetails = ({ s }: any) => {
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
-        />
-        <SPlayerDetailsButton
-          {...isMobile() ? {
-            onTouchStart: () => rotate()
-          } : {
-            onMouseDown: () => rotate()
-          }}
+        >
+          <ArrowDown size={14} />
+        </PlayerDetailsButton>
+        <PlayerDetailsButton
+          onPress={() => rotate()}
+          // {...isMobile() ? {
+          //   onTouchStart: () => rotate()
+          // } : {
+          //   onMouseDown: () => rotate()
+          // }}
           s={{
-            touchAction: isMobile() ? 'auto' : 'none',
+            // touchAction: isMobile() ? 'auto' : 'none',
           }}
         >
-          <RotateCw />
-        </SPlayerDetailsButton>
-        <SPlayerDetailsButton
-          {...isMobile() ? {
-            onTouchStart: () => moveX('right')
-          } : {
-            onMouseDown: () => moveX('right')
-          }}
+          <RotateCw size={14} />
+        </PlayerDetailsButton>
+        <PlayerDetailsButton
+          onPress={() => moveX('right')}
+          // {...isMobile() ? {
+          //   onTouchStart: () => moveX('right')
+          // } : {
+          //   onMouseDown: () => moveX('right')
+          // }}
           s={{
-            touchAction: isMobile() ? 'auto' : 'none',
+            // touchAction: isMobile() ? 'auto' : 'none',
           }}
         >
-          <ChevronRight />
-        </SPlayerDetailsButton>
+          <ChevronRight size={14} />
+        </PlayerDetailsButton>
       </Box>
     </SPlayerDetails>
   )

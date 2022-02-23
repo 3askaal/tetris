@@ -12,7 +12,7 @@ export const LocalGlobalStyle: any = createGlobalStyle<any>({
 
   svg: {
     display: 'block',
-    maxWidth: '14px !important',
-    maxHeight: '14px !important',
+    maxWidth: '16px !important',
+    maxHeight: '16px !important',
   },
 })

@@ -55,8 +55,8 @@ const PlayView = () => {
   }, [players])
 
   return (
-    <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
-      <Container s={{ alignItems: 'center', pt: '4rem' }}>
+    <Wrapper s={{ padding: 'm' }}>
+      <Container s={{ alignItems: 'center', justifyContent: 'center' }}>
         <Map />
         <PlayerDetails s={{ pt: 'm' }} />
       </Container>
