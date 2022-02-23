@@ -17,22 +17,12 @@ const PlayerDetailsButton = (props: any) => {
   let ref = useRef<any>();
   let { buttonProps } = useButton(props, ref);
   let { children } = props;
-  console.log(buttonProps)
+
   return (
     <SPlayerDetailsButton
       { ...props }
       { ...buttonProps }
       ref={ref}
-      // onTouchStart={() => onDrop()}
-      // onClick={() => useDrop(drop)}
-      // {...isMobile() ? {
-      //   onTouchStart: () => onDrop()
-      // } : {
-      //   onMouseDown: () => onDrop()
-      // }}
-      s={{
-        // touchAction: isMobile() ? 'auto' : 'none',
-      }}
     >
       { children }
     </SPlayerDetailsButton>
