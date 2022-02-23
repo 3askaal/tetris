@@ -110,23 +110,21 @@ export const GameProvider = ({ children }: any) => {
 
       const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
         inactiveShape?.blocks?.some((inactiveBlock) =>
-          activeShape?.blocks?.some((activeBlock) => {
-            const isHit = (activeShape.x + activeBlock.x) === (inactiveShape.x + inactiveBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + inactiveBlock.y)
-            const isGameOver = isHit && activeShape.y + activeBlock.y < 3
-
-            if (isGameOver) {
-              setGameOver(true)
-            }
-
-            return isHit
-          })
+          activeShape?.blocks?.some((activeBlock) =>
+            (activeShape.x + activeBlock.x) === (inactiveShape.x + inactiveBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + inactiveBlock.y)
+          )
         )
       )
 
       if (hitsBottom || hitsBlock) {
         isHit = true
         isGameOver = activeShape.y === 2
-        return [ ...inactiveShapes, { ...activeShape, active: false }, generateShape(dimensions)]
+
+        if (!isGameOver) {
+          return [ ...inactiveShapes, { ...activeShape, active: false }, generateShape(dimensions)]
+        } else {
+          return [ ...inactiveShapes, { ...activeShape, active: false } ]
+        }
       }
 
       return [ ...inactiveShapes, { ...activeShape, y: activeShape?.y + 1 }]
