@@ -6,7 +6,7 @@ export const SMap = s.div(({ theme, dimensions, width, height }: any) => ({
   position: 'relative',
   height: `${height}rem`,
   width: `${width}rem`,
-  backgroundColor: chroma('000').darken(1).hex(),
+  backgroundColor: chroma('#000').brighten(.2).hex(),
 }))
 
 export const SMapBlock = s.div(({ theme, color = '#fff' }: any) => ({
