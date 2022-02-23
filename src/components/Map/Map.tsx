@@ -16,10 +16,10 @@ export const Map = ({ style } : any) => {
     gameOver
   } = useContext(GameContext)
 
-  useMousetrap('left', () => moveX('left'))
-  useMousetrap('right', () => moveX('right'))
-  useMousetrap('space', () => drop())
-  useMousetrap('shift', () => rotate())
+  useMousetrap('left', () => !gameOver && moveX('left'))
+  useMousetrap('right', () => !gameOver && moveX('right'))
+  useMousetrap('space', () => !gameOver && drop())
+  useMousetrap('shift', () => !gameOver && rotate())
 
   useInterval(moveY, !gameOver ? 200 : null)
 
