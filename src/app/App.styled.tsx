@@ -1,8 +1,8 @@
-import styled from 'styled-components'
+import { s } from '3oilerplate'
 import { fontSize } from 'styled-system'
 
-export const SApp = styled.div<any>(
-  ({ theme }) => ({
+export const SApp = s.div(
+  ({ theme }: any) => ({
     fontFamily: theme.fonts.base,
     color: theme.colors.white,
     backgroundColor: theme.colors.background,

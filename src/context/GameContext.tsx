@@ -1,26 +1,16 @@
 import React, { createContext, useState } from 'react'
 import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
-import { Socket } from 'socket.io-client';
-import { IBomb, IExplosion, IGrid, IPlayer, ISettings } from '../types';
+import { ISettings } from '../types';
 import { generateShape, Shape } from '../helpers/generate';
 
 interface GameContextType {
-  socket?: Socket;
   shapes: Shape[];
   dimensions?: { height: number, width: number };
-  grid?: IGrid;
-  bombs?: IBomb;
-  explosions?: IExplosion;
-  players: IPlayer[];
   settings: ISettings;
-  remainingTime?: number;
-  getOpponents?: any;
-  getCurrentPlayer?: any;
 
   [key: string]: any;
 }
-
 
 export const GameContext = createContext<GameContextType>({
   settings: {
@@ -30,25 +20,10 @@ export const GameContext = createContext<GameContextType>({
   shapes: []
 })
 
-interface MoveActionPayload {
-  playerIndex: number;
-  direction: 'x' | 'y';
-  movement: number;
-}
-
-interface BombActionPayload {
-  playerIndex: number;
-}
-
 export const GameProvider = ({ children }: any) => {
   const [shapes, setShapes] = useState<Shape[]>([])
-  const [players, setPlayers] = useState<IPlayer[]>([])
-  const [currentPlayer, setCurrentPlayer] = useState<IPlayer>()
-  const [rooms, setRooms] = useState<any>([])
   const [settings, setSettings] = useState<any>({})
-  const [remainingTime, setRemainingTime] = useState<number>(1000)
   const [dimensions] = useState({ height: 36, width: 20 })
-  const [grid, setGrid] = useState<any>({})
   const [gameOver, setGameOver] = useState(false)
 
   const onStartGame = (args: any) => {
@@ -58,7 +33,6 @@ export const GameProvider = ({ children }: any) => {
     ReactGA4.event({
       category: "actions",
       action: "game:start",
-      label: players.map(({ name }: any) => name).join(' vs. '),
     });
   }
 
@@ -220,14 +194,6 @@ export const GameProvider = ({ children }: any) => {
               }
             })
 
-          // const minX = minBy(fixedBlocks, 'x')?.x as number
-          // const maxX = maxBy(fixedBlocks, 'x')?.x as number
-          // const minY = minBy(fixedBlocks, 'y')?.y as number
-          // const maxY = maxBy(fixedBlocks, 'y')?.y as number
-
-          // const fixedWidth = (maxX - minX) + 1
-          // const fixedHeight = (maxY - minY) + 1
-
           return {
             ...currentShape,
             blocks: fixedBlocks
@@ -240,19 +206,10 @@ export const GameProvider = ({ children }: any) => {
   return (
     <GameContext.Provider
       value={{
-        rooms,
-        setRooms,
         onStartGame,
-        players,
-        setPlayers,
         settings,
         setSettings,
-        remainingTime,
-        currentPlayer,
-        setCurrentPlayer,
         dimensions,
-        grid,
-        setGrid,
         gameOver,
         shapes,
         setShapes,

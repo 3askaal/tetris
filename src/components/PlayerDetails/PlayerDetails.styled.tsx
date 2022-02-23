@@ -1,4 +1,4 @@
-import { s } from '3oilerplate'
+import { s, darken, brighten } from '3oilerplate'
 import { healthStatusColor } from '../../style'
 
 export const SPlayerDetails = s.div(({ theme, index }: any) => ({
@@ -25,7 +25,7 @@ export const SPlayerDetailsMiddle = s.div(({ theme }: any) => ({
 }))
 
 
-export const SPlayerDetailsButton = s.button(({ theme, type, color }: any) => ({
+export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type }: any) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -38,12 +38,30 @@ export const SPlayerDetailsButton = s.button(({ theme, type, color }: any) => ({
   flexBasis: '33.33%',
   cursor: 'pointer',
 
-  ...type === 'bomb' && ({
-    flexBasis: '25%'
-  }),
+  ...isDesktop && ({
+    backgroundColor: brighten('#000', .6),
+    border: '.15rem solid',
+    borderRadius: '.25rem',
+    borderLeftColor: brighten('#000', .2),
+    borderBottomColor: brighten('#000', .2),
+    borderTopColor: brighten('#000', .4),
+    borderRightColor: brighten('#000', .4),
+    boxShadow: '0 0 5px 0 rgba(0, 0, 0, 0.25)',
+    paddingX: 's',
 
-  ...type !== 'bomb' && ({
-    width: '100%',
+    ...type === 'SPACE' && ({
+      flexBasis: '40%',
+      justifyContent: 'space-between'
+    }),
+
+    ...type === 'SHIFT' && ({
+      flexBasis: '30%',
+      justifyContent: 'space-between'
+    }),
+
+    ...type === 'MOVE' && ({
+      flexBasis: '15%',
+    }),
   }),
 
   'svg': {

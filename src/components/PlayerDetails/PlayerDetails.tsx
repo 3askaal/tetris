@@ -11,13 +11,16 @@ import isMobile from 'is-mobile'
 import { GameContext } from '../../context'
 import { useButton } from '@react-aria/button'
 
+const isDesktop = !isMobile((window as any).navigator)
+
 const PlayerDetailsButton = (props: any) => {
   let ref = useRef<any>();
   let { buttonProps } = useButton(props, ref);
   let { children } = props;
-
+  console.log(buttonProps)
   return (
     <SPlayerDetailsButton
+      { ...props }
       { ...buttonProps }
       ref={ref}
       // onTouchStart={() => onDrop()}
@@ -50,6 +53,8 @@ export const PlayerDetails = ({ s }: any) => {
       }}>
         <PlayerDetailsButton
           onPress={() => moveX('left')}
+          isDesktop={isDesktop}
+          type={'MOVE'}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
@@ -58,22 +63,30 @@ export const PlayerDetails = ({ s }: any) => {
         </PlayerDetailsButton>
         <PlayerDetailsButton
           onPress={() => drop()}
+          isDesktop={isDesktop}
+          type={'SPACE'}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
         >
+          <Box>{ isDesktop ? 'SPACE' : '' }</Box>
           <ArrowDown size={14} />
         </PlayerDetailsButton>
         <PlayerDetailsButton
           onPress={() => rotate()}
+          isDesktop={isDesktop}
+          type={'SHIFT'}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
         >
           <RotateCw size={14} />
+          <Box>{ isDesktop ? 'SHIFT' : '' }</Box>
         </PlayerDetailsButton>
         <PlayerDetailsButton
           onPress={() => moveX('right')}
+          isDesktop={isDesktop}
+          type={'MOVE'}
           s={{
             // touchAction: isMobile() ? 'auto' : 'none',
           }}
