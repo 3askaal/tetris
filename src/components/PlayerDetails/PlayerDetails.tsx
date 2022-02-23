@@ -11,7 +11,7 @@ import isMobile from 'is-mobile'
 import { GameContext } from '../../context'
 import { useButton } from '@react-aria/button'
 
-const isDesktop = !isMobile((window as any).navigator)
+const isDesktop = !isMobile()
 
 const PlayerDetailsButton = (props: any) => {
   let ref = useRef<any>();
