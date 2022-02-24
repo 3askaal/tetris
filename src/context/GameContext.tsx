@@ -180,13 +180,13 @@ export const GameProvider = ({ children }: any) => {
       const amountRowsIndex = filledRows.length - 1
 
       const newRows = score.rows + filledRows.length
-      const newLevel = Math.ceil(newRows / 10) + 1
+      const newLevel = Math.floor(newRows / 10) || 1
       const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * score.level)
 
       setScore({
-        rows: newRows,
+        level: newLevel,
         score: newScore,
-        level: newLevel
+        rows: newRows,
       })
 
       return [...currentShapes]
