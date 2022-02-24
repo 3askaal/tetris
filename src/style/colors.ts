@@ -1,4 +1,4 @@
-import { darken, brighten } from '3oilerplate'
+import { darken, brighen } from '3oilerplate'
 import chroma from 'chroma-js';
 
 const positive = '#66DE93'
@@ -12,7 +12,7 @@ export const colors: any = {
   primaryDark: darken('#7459dc', 0.25),
   secondary: '#04f2d5',
   secondaryDark: darken('#04f2d5', 0.25),
-  background: darken('#8D93AB', 0),
+  background: chroma('#203239').brighten(.25).hex(),
   backgroundLight: '#04293A',
   positive,
   negative,

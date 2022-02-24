@@ -29,12 +29,12 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type }: any) =
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: ['2rem', '3rem'],
+  height: ['2rem', '4rem', '3rem'],
   // backgroundColor: 'backgroundLight',
   // border: 'transparent',
   margin: '.25rem',
   // borderRadius: '.125rem',
-  color: 'white',
+  color: darken('white', 0.5),
   flexBasis: '50%',
   cursor: 'pointer',
   backgroundColor: brighten('#000', .6),
@@ -44,7 +44,7 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type }: any) =
   borderBottomColor: brighten('#000', .2),
   borderTopColor: brighten('#000', .4),
   borderRightColor: brighten('#000', .4),
-  boxShadow: '0 0 5px 0 rgba(0, 0, 0, 0.25)',
+  // boxShadow: '1px -1px 5px 0 rgba(0, 0, 0, 0.25)',
 
   ...isDesktop && ({
     paddingX: 's',

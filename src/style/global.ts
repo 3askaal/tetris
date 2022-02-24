@@ -14,5 +14,6 @@ export const LocalGlobalStyle: any = createGlobalStyle<any>({
     display: 'block',
     maxWidth: '16px !important',
     maxHeight: '16px !important',
+    stroke: 'currentcolor !important'
   },
 })
