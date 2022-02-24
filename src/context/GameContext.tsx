@@ -181,7 +181,7 @@ export const GameProvider = ({ children }: any) => {
 
       const newRows = score.rows + filledRows.length
       const newLevel = Math.ceil(newRows / 10) + 1
-      const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * newLevel)
+      const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * score.level)
 
       setScore({
         rows: newRows,
