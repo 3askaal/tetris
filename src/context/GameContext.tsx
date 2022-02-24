@@ -25,6 +25,7 @@ export const GameProvider = ({ children }: any) => {
   const [settings, setSettings] = useState<any>({})
   const [dimensions] = useState({ height: 36, width: 20 })
   const [gameOver, setGameOver] = useState(false)
+  const [score, setScore] = useState({ level: 1, score: 0, rows: 0 })
 
   const onStartGame = (args: any) => {
     setGameOver(false)
@@ -175,6 +176,12 @@ export const GameProvider = ({ children }: any) => {
         return currentShapes
       }
 
+      setScore({
+        rows: score.rows + filledRows.length,
+        score: score.score + ([40, 100, 300, 1200][filledRows.length - 1] * score.level),
+        level: Math.ceil(score.rows / 10) + 1
+      })
+
       return [...currentShapes]
         .map((currentShape, index) => {
           if (currentShape.active) {
@@ -217,6 +224,7 @@ export const GameProvider = ({ children }: any) => {
         moveY,
         drop,
         rotate,
+        score
       }}
     >
       {children}

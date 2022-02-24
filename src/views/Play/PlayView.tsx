@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { Container, Wrapper, Popup, Button, Text } from '3oilerplate'
+import { Spacer, Box, Container, Wrapper, Popup, Button, Text } from '3oilerplate'
 import ReactGA from 'react-ga4'
 import { PlayerDetails, Map } from '../../components'
 import { GameContext } from '../../context'
@@ -10,6 +10,7 @@ const PlayView = () => {
   const {
     onStartGame,
     gameOver,
+    score
   } = useContext(GameContext)
 
   useKeyboardBindings()
@@ -31,6 +32,13 @@ const PlayView = () => {
   return (
     <Wrapper s={{ padding: 'm' }}>
       <Container s={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Box s={{ mb: 'm' }}>
+          <Spacer size="xs" s={{ flexDirection: 'row' }}>
+            <span>Level: { score.level }</span>
+            <span>Score: { score.score }</span>
+            <span>Rows: { score.rows }</span>
+          </Spacer>
+        </Box>
         <Map />
         <PlayerDetails s={{ pt: 'm' }} />
       </Container>
