@@ -1,4 +1,4 @@
-import { find, times, sample, random, minBy, maxBy } from 'lodash'
+import { find, times, sample, random, minBy, maxBy, last } from 'lodash'
 import randomColor from 'randomcolor'
 
 export interface Shape {
@@ -42,7 +42,7 @@ export const generateShape = (dimensions: any) => {
       let nextBlock: any = null
 
       while (blockExists) {
-        nextBlock = { ...sample(shape.blocks) }
+        nextBlock = { ...last(shape.blocks) }
         const randomDirection = sample(['x', 'y']) as 'x' | 'y'
         nextBlock[randomDirection] += possibleMovement[randomDirection]
         blockExists = find(shape.blocks, { ...nextBlock })
@@ -65,3 +65,20 @@ export const generateShape = (dimensions: any) => {
 
   return shape
 }
+
+// const shapes = [
+//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }],
+//   [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }],
+
+//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }],
+//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }],
+
+//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
+//   [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 0 }, { x: 2, y: 0 }],
+//   [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 2 }],
+//   [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }, { x: 0, y: 2 }],
+
+//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
+
+//   [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }],
+// ]

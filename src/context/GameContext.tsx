@@ -3,6 +3,8 @@ import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
 import { ISettings } from '../types';
 import { generateShape, Shape } from '../helpers/generate';
+import useMousetrap from 'react-hook-mousetrap';
+import { useInterval } from '../helpers/interval';
 
 interface GameContextType {
   shapes: Shape[];
@@ -216,6 +218,13 @@ export const GameProvider = ({ children }: any) => {
         .filter((shape) => shape.blocks.length)
     })
   }
+
+  useMousetrap('left', () => !gameOver && moveX('left'))
+  useMousetrap('right', () => !gameOver && moveX('right'))
+  useMousetrap('space', () => !gameOver && drop())
+  useMousetrap('shift', () => !gameOver && rotate())
+
+  useInterval(moveY, !gameOver ? 200 : null)
 
   return (
     <GameContext.Provider
