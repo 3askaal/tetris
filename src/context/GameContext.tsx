@@ -32,6 +32,7 @@ export const GameProvider = ({ children }: any) => {
   const onStartGame = (args: any) => {
     setGameOver(false)
     setShapes([generateShape(dimensions)])
+    setScore({ level: 1, score: 0, rows: 0 })
 
     ReactGA4.event({
       category: "actions",
@@ -181,8 +182,9 @@ export const GameProvider = ({ children }: any) => {
       const pointsForAmountRows = [40, 100, 300, 1200]
       const amountRowsIndex = filledRows.length - 1
 
+
       const newRows = score.rows + filledRows.length
-      const newLevel = Math.floor(newRows / 10) || 1
+      const newLevel = Math.floor(newRows / 10) + 1
       const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * score.level)
 
       setScore({
