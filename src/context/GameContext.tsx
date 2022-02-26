@@ -83,16 +83,17 @@ export const GameProvider = ({ children }: any) => {
     setShapes((currentShapes) => {
       const activeShape = currentShapes.filter(({ active }) => active)[0]
       const inactiveShapes = currentShapes.filter(({ active }) => !active)
-
-      const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height
+      const nextShape = { ...activeShape, y: activeShape.y + 1 }
 
       const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
-        inactiveShape?.blocks?.some((inactiveBlock) =>
-          activeShape?.blocks?.some((activeBlock) =>
-            (activeShape.x + activeBlock.x) === (inactiveShape.x + inactiveBlock.x) && ((activeShape.y + 1) + activeBlock.y) === (inactiveShape.y + inactiveBlock.y)
+        inactiveShape.blocks.some((inactiveBlock) =>
+          nextShape.blocks.some((nextBlock) =>
+            (nextShape.x + nextBlock.x) === (inactiveShape.x + inactiveBlock.x) && (nextShape.y + nextBlock.y) === (inactiveShape.y + inactiveBlock.y)
           )
         )
       )
+
+      const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height
 
       if (hitsBottom || hitsBlock) {
         isHit = true

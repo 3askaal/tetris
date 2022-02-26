@@ -30,7 +30,7 @@ const PlayView = () => {
   }, [gameOver])
 
   return (
-    <Wrapper s={{ padding: 'm' }}>
+    <Wrapper>
       <Container s={{ alignItems: 'center', justifyContent: 'center' }}>
         <Box s={{ mb: 'm' }}>
           <Spacer size="xs" s={{ flexDirection: 'row' }}>
@@ -40,7 +40,7 @@ const PlayView = () => {
           </Spacer>
         </Box>
         <Map />
-        <PlayerDetails s={{ pt: 'm' }} />
+        <PlayerDetails s={{ pt: 'm', display: ['none', 'flex'] }} />
       </Container>
       { gameOver && (
         <Popup
