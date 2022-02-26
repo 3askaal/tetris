@@ -110,7 +110,7 @@ export const GameProvider = ({ children }: any) => {
     })
 
     if (isHit) {
-      cleanupRow()
+      cleanupRows()
     }
 
     if (isGameOver) {
@@ -160,31 +160,36 @@ export const GameProvider = ({ children }: any) => {
     }))
   }
 
-  const cleanupRow = () => {
+  const getFullRows = (shapes: Shape[]): number[] => {
+    const inactiveShapes = shapes.filter(({ active }) => !active)
+
+    const inactiveBlocks = inactiveShapes.map(
+      ({ x, y, blocks }) => blocks?.map(
+        (block) => ({ ...block, x: block.x + x, y: block.y + y })
+      )
+    ).flat()
+
+    const inactiveRows = groupBy(inactiveBlocks, 'y')
+
+    const fullRows = Object.entries(inactiveRows)
+      .filter(([index, inactiveRow]) => inactiveRow.length > dimensions.width - 1 && index)
+      .map(([index]) => Number(index))
+
+    return fullRows
+  }
+
+  const cleanupRows = () => {
     setShapes((currentShapes) => {
-      const inactiveShapes = currentShapes.filter(({ active }) => !active)
+      const fullRows = getFullRows(currentShapes)
 
-      const inactiveBlocks = inactiveShapes.map(
-        ({ x, y, blocks }) => blocks?.map(
-          (block) => ({ ...block, x: block.x + x, y: block.y + y })
-        )
-      ).flat()
-
-      const inactiveRows = groupBy(inactiveBlocks, 'y')
-
-      const filledRows = Object.entries(inactiveRows)
-        .filter(([index, inactiveRow]) => inactiveRow.length > dimensions.width - 1 && index)
-        .map(([index]) => Number(index))
-
-      if (!filledRows.length) {
+      if (!fullRows.length) {
         return currentShapes
       }
 
       const pointsForAmountRows = [40, 100, 300, 1200]
-      const amountRowsIndex = filledRows.length - 1
+      const amountRowsIndex = fullRows.length - 1
 
-
-      const newRows = score.rows + filledRows.length
+      const newRows = score.rows + fullRows.length
       const newLevel = Math.floor(newRows / 10) + 1
       const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * score.level)
 
@@ -194,32 +199,64 @@ export const GameProvider = ({ children }: any) => {
         rows: newRows,
       })
 
-      return [...currentShapes]
+      return currentShapes
         .map((currentShape, index) => {
           if (currentShape.active) {
             return currentShape
           }
 
-          const fixedBlocks = currentShape.blocks
-            .filter((inactiveBlock) => {
-              return !includes(filledRows, currentShape.y + inactiveBlock.y)
-            })
+          const remainingBlocks = currentShape.blocks
             .map((inactiveBlock) => {
-              const amountToMove = sum(filledRows.map((rowY) => (currentShape.y + inactiveBlock.y) < rowY ? 1 : 0))
-
-              return {
-                ...inactiveBlock,
-                y: inactiveBlock.y + amountToMove
+              if (includes(fullRows, currentShape.y + inactiveBlock.y)) {
+                return { ...inactiveBlock, dead: true }
               }
+
+              return inactiveBlock
             })
+            // .filter((inactiveBlock) => {
+            //   return !includes(fullRows, currentShape.y + inactiveBlock.y)
+            // })
+
+          // const remainingBlocksMoved =
+          //   remainingBlocks.map((inactiveBlock) => {
+          //     const amountToMove = sum(fullRows.map((rowY) => (currentShape.y + inactiveBlock.y) < rowY ? 1 : 0))
+
+          //     return {
+          //       ...inactiveBlock,
+          //       y: inactiveBlock.y + amountToMove
+          //     }
+          //   })
 
           return {
             ...currentShape,
-            blocks: fixedBlocks
+            blocks: remainingBlocks
           }
         })
         .filter((shape) => shape.blocks.length)
     })
+
+    setTimeout(() => {
+      setShapes((currentShapes) => {
+        const fullRows = getFullRows(currentShapes)
+
+        return currentShapes.map((currentShape) => {
+          return {
+            ...currentShape,
+            blocks: currentShape.blocks
+              .filter(({ dead }) => !dead)
+              .map((inactiveBlock) => {
+                const amountToMove = sum(fullRows.map((rowY) => (currentShape.y + inactiveBlock.y) < rowY ? 1 : 0))
+
+                return {
+                  ...inactiveBlock,
+                  y: inactiveBlock.y + amountToMove
+                }
+              })
+          }
+        })
+
+      })
+    }, 500)
   }
 
   useMousetrap('left', () => !gameOver && moveX('left'))

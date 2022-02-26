@@ -49,7 +49,8 @@ export const Map = ({ style } : any) => {
           { shape.blocks.map((block: any, index: number) => (
             <SMapBlock
               key={`block-${index}`}
-              color={!block.dead ? shape.color : 'black'}
+              color={shape.color}
+              dead={block.dead}
               s={{
                 left: `${block.x}rem`,
                 top: `${block.y}rem`

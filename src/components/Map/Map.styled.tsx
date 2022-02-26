@@ -15,7 +15,7 @@ export const SMapShape = s.div(({ theme, isActive }: any) => ({
   // })
 }))
 
-export const SMapBlock = s.div(({ theme, color = '#fff' }: any) => ({
+export const SMapBlock = s.div(({ theme, color = '#fff', dead }: any) => ({
   position: 'absolute',
   width: '1rem',
   height: '1rem',
@@ -28,5 +28,16 @@ export const SMapBlock = s.div(({ theme, color = '#fff' }: any) => ({
   // Dark
   borderLeftColor: chroma(color).darken(1).hex(),
   borderBottomColor: chroma(color).darken(1).hex(),
-  transition: 'all .025s linear'
+  transition: 'all .025s linear',
+
+  ...(dead && {
+    // Light
+    borderRightColor: chroma('#fff').darken(1.5).hex(),
+    borderTopColor: chroma('#fff').darken(1.5).hex(),
+    // Middle
+    backgroundColor: chroma('#fff').darken(2.5).hex(),
+    // Dark
+    borderLeftColor: chroma('#fff').darken(3.5).hex(),
+    borderBottomColor: chroma('#fff').darken(3.5).hex(),
+  })
 }))
