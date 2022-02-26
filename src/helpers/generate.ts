@@ -12,6 +12,40 @@ export interface Shape {
   rotated: boolean;
 }
 
+
+const shapes = [
+  [
+    // lines
+    [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }],
+    [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }],
+  ],
+  [
+    // blocks
+    [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }],
+  ],
+  [
+    // S shapes
+    [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
+    [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 0 }, { x: 2, y: 0 }],
+    [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 2 }],
+    [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }, { x: 0, y: 2 }],
+  ],
+  [
+    // L shapes
+    [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }],
+    [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 2, y: 0 }],
+    [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 2 }],
+    [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 0, y: 2 }],
+  ],
+  [
+    // triangle shapes
+    [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 1, y: 1 }],
+    [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 0 }],
+    [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 1 }],
+    [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 0, y: 1 }],
+  ]
+]
+
 export const generateShape = (dimensions: any) => {
   const shape: Shape = {
     color: randomColor(),
@@ -24,33 +58,35 @@ export const generateShape = (dimensions: any) => {
     active: true
   };
 
-  const amountBlocksInShape = 4
+  // const amountBlocksInShape = 4
 
-  const startingPoints = [{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 4, y: 0 }, { x: 4, y: 4 }]
-  const possibleMovements = [{ x: 1, y: 1 } , { x: 1, y: -1 }, { x: -1, y: 1 }, { x: -1, y: -1 }];
+  // const startingPoints = [{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 4, y: 0 }, { x: 4, y: 4 }]
+  // const possibleMovements = [{ x: 1, y: 1 } , { x: 1, y: -1 }, { x: -1, y: 1 }, { x: -1, y: -1 }];
 
-  const cornerIndex = random(3)
+  // const cornerIndex = random(3)
 
-  const startingPoint = startingPoints[cornerIndex]
-  const possibleMovement = possibleMovements[cornerIndex]
+  // const startingPoint = startingPoints[cornerIndex]
+  // const possibleMovement = possibleMovements[cornerIndex]
 
-  times(amountBlocksInShape, (i) => {
-    if (i === 0) {
-      shape.blocks.push(startingPoint)
-    } else {
-      let blockExists: any = true
-      let nextBlock: any = null
+  // times(amountBlocksInShape, (i) => {
+  //   if (i === 0) {
+  //     shape.blocks.push(startingPoint)
+  //   } else {
+  //     let blockExists: any = true
+  //     let nextBlock: any = null
 
-      while (blockExists) {
-        nextBlock = { ...last(shape.blocks) }
-        const randomDirection = sample(['x', 'y']) as 'x' | 'y'
-        nextBlock[randomDirection] += possibleMovement[randomDirection]
-        blockExists = find(shape.blocks, { ...nextBlock })
-      }
+  //     while (blockExists) {
+  //       nextBlock = { ...last(shape.blocks) }
+  //       const randomDirection = sample(['x', 'y']) as 'x' | 'y'
+  //       nextBlock[randomDirection] += possibleMovement[randomDirection]
+  //       blockExists = find(shape.blocks, { ...nextBlock })
+  //     }
 
-      shape.blocks.push(nextBlock)
-    }
-  })
+  //     shape.blocks.push(nextBlock)
+  //   }
+  // })
+
+  shape.blocks = sample(sample(shapes))  as any
 
   const minX = minBy(shape.blocks, 'x')?.x as number
   const maxX = maxBy(shape.blocks, 'x')?.x as number
@@ -65,20 +101,3 @@ export const generateShape = (dimensions: any) => {
 
   return shape
 }
-
-// const shapes = [
-//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }],
-//   [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }],
-
-//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }],
-//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }],
-
-//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
-//   [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 0 }, { x: 2, y: 0 }],
-//   [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 2 }],
-//   [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }, { x: 0, y: 2 }],
-
-//   [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }],
-
-//   [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }],
-// ]
