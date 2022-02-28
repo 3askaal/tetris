@@ -8,18 +8,15 @@ import { useInterval } from '../helpers/interval';
 
 interface GameContextType {
   shape: Shape | null;
+  blocks: Block[];
   dimensions?: { height: number, width: number };
-  settings: ISettings;
 
   [key: string]: any;
 }
 
 export const GameContext = createContext<GameContextType>({
-  settings: {
-    type: 'local'
-  },
-  players: [],
-  shape: null
+  shape: null,
+  blocks: [],
 })
 
 export const GameProvider = ({ children }: any) => {
@@ -59,6 +56,14 @@ export const GameProvider = ({ children }: any) => {
     setBlocksState(blocks)
   }
 
+  const checkShapePosition = (nextShape: Shape) => {
+    return currentBlocks.current.some((block: Block) =>
+      nextShape.blocks.some((nextBlock) =>
+        (nextShape.x + nextBlock.x) === block.x && (nextShape.y + nextBlock.y) === block.y
+      )
+    )
+  }
+
   const moveX = (direction: 'left' | 'right') => {
     const movements =  {
       left: -1,
@@ -78,7 +83,7 @@ export const GameProvider = ({ children }: any) => {
       x: currentShape.current.x + movements[direction]
     }
 
-    const hitsBlock = checkHitsBlock(nextShape)
+    const hitsBlock = checkShapePosition(nextShape)
 
     if (hitsBlock) {
       return
@@ -87,18 +92,10 @@ export const GameProvider = ({ children }: any) => {
     setShape(nextShape)
   }
 
-  const checkHitsBlock = (nextShape: Shape) => {
-    return currentBlocks.current.some((block: Block) =>
-      nextShape.blocks.some((nextBlock) =>
-        (nextShape.x + nextBlock.x) === block.x && (nextShape.y + nextBlock.y) === block.y
-      )
-    )
-  }
-
   const moveY = () => {
     const nextShape: Shape = { ...currentShape.current, y: currentShape.current.y + 1 }
 
-    const hitsBlock = checkHitsBlock(nextShape)
+    const hitsBlock = checkShapePosition(nextShape)
     const hitsBottom = (currentShape.current.y + currentShape.current.height) === dimensions.height
 
     const isHit = hitsBlock || hitsBottom
@@ -144,27 +141,34 @@ export const GameProvider = ({ children }: any) => {
       width: currentShape.current.height,
       height: currentShape.current.width,
       rotated: !currentShape.current.rotated,
-      blocks: currentShape.current.blocks.map((block: Block) => ({
-        x: (currentShape.current.height - 1) - block.y,
-        y: block.x
-      }))
     }
 
-    const shapeStart = rotatedShape.x
-    const shapeEnd = rotatedShape.x + rotatedShape.width
+    rotatedShape.blocks = currentShape.current.blocks.map((block: Block) => ({
+      x: (rotatedShape.width - 1) - block.y,
+      y: block.x
+    }))
 
-    if (shapeStart < 1) {
-      rotatedShape.x += 1
-    }
+    // const shapeStart = rotatedShape.x
+    // const shapeEnd = rotatedShape.x + rotatedShape.width
 
-    if (shapeEnd > dimensions.width - 1) {
-      rotatedShape.x -= 1
+    // if (shapeStart < 1) {
+    //   rotatedShape.x += 1
+    // }
+
+    // if (shapeEnd > dimensions.width - 1) {
+    //   rotatedShape.x -= 1
+    // }
+
+    const hitsBlock = checkShapePosition(rotatedShape)
+
+    if (hitsBlock) {
+      return
     }
 
     setShape(rotatedShape)
   }
 
-  const getFullRows = (): number[] => {
+  const getFilledRows = (): number[] => {
     const inactiveRows = groupBy(currentBlocks.current, 'y')
 
     const fullRows = Object.entries(inactiveRows)
@@ -175,7 +179,7 @@ export const GameProvider = ({ children }: any) => {
   }
 
   const cleanupRows = () => {
-    const filledRows = getFullRows()
+    const filledRows = getFilledRows()
 
     if (!filledRows.length) {
       return
@@ -205,7 +209,9 @@ export const GameProvider = ({ children }: any) => {
           .filter(({ dead }: Block) => !dead)
           .map((block: Block) => ({
             ...block,
-            y: block.y + sum(filledRows.map((rowY) => block.y < rowY ? 1 : 0))
+            y: block.y + sum(
+              filledRows.map((rowY) => block.y < rowY ? 1 : 0)
+            )
           }))
       )
     }, 500)
