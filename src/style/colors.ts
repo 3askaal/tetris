@@ -8,12 +8,12 @@ export const healthStatusColor = (health: number): string =>
   chroma.mix(negative, positive, (health || 100) / 100).hex()
 
 export const colors: any = {
-  primary: '#7459dc',
-  primaryDark: darken('#7459dc', 0.25),
+  primary: '#5463FF',
+  primaryDark: darken('#5463FF', 0.5),
   secondary: '#04f2d5',
   secondaryDark: darken('#04f2d5', 0.25),
-  background: chroma('#203239').brighten(.25).hex(),
-  backgroundLight: '#04293A',
+  background: chroma('#313552').darken(0).hex(),
+  backgroundLight: chroma('#21325E').brighten(.25).hex(),
   positive,
   negative,
 }

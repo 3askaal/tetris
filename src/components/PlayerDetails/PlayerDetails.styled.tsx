@@ -1,4 +1,5 @@
 import { s, darken, brighten } from '3oilerplate'
+import { transcode } from 'buffer'
 
 export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
@@ -8,7 +9,7 @@ export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   mt: '1rem'
 }))
 
-export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type }: any) => ({
+export const SPlayerDetailsButton = s.div(({ theme, isDesktop, type, isPressed }: any) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -26,10 +27,17 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type }: any) =
   borderBottomColor: brighten('#000', .2),
   borderTopColor: brighten('#000', .4),
   borderRightColor: brighten('#000', .4),
-  outline: 0,
+  appearance: 'none',
+  outline: 'none !important',
+
+  ...(isPressed && {
+    backgroundColor: 'primary',
+    borderColor: 'primaryDark',
+  }),
 
   ...isDesktop && ({
     paddingX: 's',
+    pointerEvents: 'none',
 
     ...type === 'SPACE' && ({
       flexBasis: '40%',

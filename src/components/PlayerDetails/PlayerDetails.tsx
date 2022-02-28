@@ -15,13 +15,14 @@ const isDesktop = !isMobile()
 
 const PlayerDetailsButton = (props: any) => {
   let ref = useRef<any>();
-  let { buttonProps } = useButton(props, ref);
+  let { buttonProps, isPressed } = useButton(props, ref);
   let { children } = props;
 
   return (
     <SPlayerDetailsButton
       { ...props }
       { ...buttonProps }
+      isPressed={isPressed}
       ref={ref}
     >
       { children }
