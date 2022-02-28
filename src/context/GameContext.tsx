@@ -1,7 +1,6 @@
 import React, { createContext, useRef, useState } from 'react'
 import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
-import { ISettings } from '../types';
 import { Block, generateShape, Shape } from '../helpers/generate';
 import useMousetrap from 'react-hook-mousetrap';
 import { useInterval } from '../helpers/interval';
@@ -10,7 +9,6 @@ interface GameContextType {
   shape: Shape | null;
   blocks: Block[];
   dimensions?: { height: number, width: number };
-
   [key: string]: any;
 }
 
