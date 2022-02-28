@@ -3,13 +3,20 @@ import randomColor from 'randomcolor'
 
 export interface Shape {
   color: string;
-  blocks: { x: number, y: number, dead?: boolean }[];
+  blocks: Block[];
   width: number;
   height: number;
   x: number;
   y: number;
   active: boolean;
   rotated: boolean;
+}
+
+export interface Block {
+  x: number;
+  y: number;
+  color?: string;
+  dead?: boolean;
 }
 
 

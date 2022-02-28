@@ -1,13 +1,13 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useRef, useState } from 'react'
 import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
 import { ISettings } from '../types';
-import { generateShape, Shape } from '../helpers/generate';
+import { Block, generateShape, Shape } from '../helpers/generate';
 import useMousetrap from 'react-hook-mousetrap';
 import { useInterval } from '../helpers/interval';
 
 interface GameContextType {
-  shapes: Shape[];
+  shape: Shape | null;
   dimensions?: { height: number, width: number };
   settings: ISettings;
 
@@ -19,11 +19,15 @@ export const GameContext = createContext<GameContextType>({
     type: 'local'
   },
   players: [],
-  shapes: []
+  shape: null
 })
 
 export const GameProvider = ({ children }: any) => {
-  const [shapes, setShapes] = useState<Shape[]>([])
+  const [shape, setShapeState] = useState<Shape | null>(null)
+  const [blocks, setBlocksState] = useState<Block[]>([])
+  const currentShape = useRef<any>(null)
+  const currentBlocks = useRef<any>([])
+
   const [settings, setSettings] = useState<any>({})
   const [dimensions] = useState({ height: 36, width: 20 })
   const [gameOver, setGameOver] = useState(false)
@@ -31,13 +35,28 @@ export const GameProvider = ({ children }: any) => {
 
   const onStartGame = (args: any) => {
     setGameOver(false)
-    setShapes([generateShape(dimensions)])
     setScore({ level: 1, score: 0, rows: 0 })
+
+    setBlocks([])
+
+    const newShape = generateShape(dimensions)
+    setShape(newShape)
+    currentShape.current = newShape
 
     ReactGA4.event({
       category: "actions",
       action: "game:start",
     });
+  }
+
+  const setShape = (shape: Shape | null) => {
+    currentShape.current = shape
+    setShapeState(shape)
+  }
+
+  const setBlocks = (blocks: any) => {
+    currentBlocks.current = blocks
+    setBlocksState(blocks)
   }
 
   const moveX = (direction: 'left' | 'right') => {
@@ -46,74 +65,65 @@ export const GameProvider = ({ children }: any) => {
       right: 1
     }
 
-    setShapes((currentShapes) => currentShapes.map((currentShape) => {
-      if (!currentShape.active) {
-        return currentShape
-      }
+    const nextPosStart = currentShape.current.x + movements[direction]
+    const nextPosEnd = currentShape.current.x + currentShape.current.width + movements[direction]
+    const hitsSide = nextPosStart < 0 || nextPosEnd > dimensions.width
 
-      const nextPosStart = currentShape.x + movements[direction]
-      const nextPosEnd = currentShape.x + currentShape.width + movements[direction]
-      const hitsSide = nextPosStart < 0 || nextPosEnd > dimensions.width
+    if (hitsSide) {
+      return
+    }
 
-      if (hitsSide) {
-        return currentShape
-      }
+    const nextShape = {
+      ...currentShape.current,
+      x: currentShape.current.x + movements[direction]
+    }
 
-      const activeShape = currentShapes.filter(({ active }) => active)[0]
-      const inactiveShapes = currentShapes.filter(({ active }) => !active)
+    const hitsBlock = checkHitsBlock(nextShape)
 
-      const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
-        inactiveShape.blocks.some((inactiveBlock) =>
-          activeShape.blocks.some((activeBlock) => (activeShape.x + activeBlock.x) + movements[direction] === (inactiveShape.x + inactiveBlock.x) && (activeShape.y + activeBlock.y) === (inactiveShape.y + inactiveBlock.y))
-        )
+    if (hitsBlock) {
+      return
+    }
+
+    setShape(nextShape)
+  }
+
+  const checkHitsBlock = (nextShape: Shape) => {
+    return currentBlocks.current.some((block: Block) =>
+      nextShape.blocks.some((nextBlock) =>
+        (nextShape.x + nextBlock.x) === block.x && (nextShape.y + nextBlock.y) === block.y
       )
-
-      if (hitsBlock) {
-        return currentShape
-      }
-
-      return { ...currentShape, x: currentShape.x + movements[direction] }
-    }))
+    )
   }
 
   const moveY = () => {
-    let isHit = false
-    let isGameOver = false
+    const nextShape: Shape = { ...currentShape.current, y: currentShape.current.y + 1 }
 
-    setShapes((currentShapes) => {
-      const activeShape = currentShapes.filter(({ active }) => active)[0]
-      const inactiveShapes = currentShapes.filter(({ active }) => !active)
-      const nextShape = { ...activeShape, y: activeShape.y + 1 }
+    const hitsBlock = checkHitsBlock(nextShape)
+    const hitsBottom = (currentShape.current.y + currentShape.current.height) === dimensions.height
 
-      const hitsBlock = inactiveShapes.length && inactiveShapes.some((inactiveShape) =>
-        inactiveShape.blocks.some((inactiveBlock) =>
-          nextShape.blocks.some((nextBlock) =>
-            (nextShape.x + nextBlock.x) === (inactiveShape.x + inactiveBlock.x) && (nextShape.y + nextBlock.y) === (inactiveShape.y + inactiveBlock.y)
-          )
-        )
-      )
-
-      const hitsBottom = (activeShape?.y + activeShape?.height) === dimensions.height
-
-      if (hitsBottom || hitsBlock) {
-        isHit = true
-        isGameOver = activeShape.y === 2
-
-        if (!isGameOver) {
-          return [ ...inactiveShapes, { ...activeShape, active: false }, generateShape(dimensions)]
-        } else {
-          return [ ...inactiveShapes, { ...activeShape, active: false } ]
-        }
-      }
-
-      return [ ...inactiveShapes, { ...activeShape, y: activeShape?.y + 1 }]
-    })
+    const isHit = hitsBlock || hitsBottom
+    const isGameOver = isHit && currentShape.current.y === 2
 
     if (isHit) {
+      setBlocks([
+        ...currentBlocks.current,
+        ...currentShape.current.blocks.map((currentBlock: any) => ({
+          ...currentBlock,
+          x: currentShape.current.x + currentBlock.x,
+          y: currentShape.current.y + currentBlock.y,
+          color: currentShape.current.color
+        })),
+      ])
+
+      setShape(generateShape(dimensions))
       cleanupRows()
+    } else {
+      setShape(nextShape)
     }
 
     if (isGameOver) {
+      currentShape.current = null
+      setShape(null)
       setGameOver(true)
     }
 
@@ -129,47 +139,33 @@ export const GameProvider = ({ children }: any) => {
   }
 
   const rotate = () => {
-    setShapes((currentShapes) => currentShapes.map((currentShape) => {
-      if (!currentShape.active) {
-        return currentShape
-      }
+    const rotatedShape = {
+      ...currentShape.current,
+      width: currentShape.current.height,
+      height: currentShape.current.width,
+      rotated: !currentShape.current.rotated,
+      blocks: currentShape.current.blocks.map((block: Block) => ({
+        x: (currentShape.current.height - 1) - block.y,
+        y: block.x
+      }))
+    }
 
-      const rotatedShape = {
-        ...currentShape,
-        width: currentShape.height,
-        height: currentShape.width,
-        rotated: !currentShape.rotated,
-        blocks: currentShape.blocks.map((block) => ({
-          x: (currentShape.height - 1) - block.y,
-          y: block.x
-        }))
-      }
+    const shapeStart = rotatedShape.x
+    const shapeEnd = rotatedShape.x + rotatedShape.width
 
-      const shapeStart = rotatedShape.x
-      const shapeEnd = rotatedShape.x + rotatedShape.width
+    if (shapeStart < 1) {
+      rotatedShape.x += 1
+    }
 
-      if (shapeStart < 1) {
-        rotatedShape.x += 1
-      }
+    if (shapeEnd > dimensions.width - 1) {
+      rotatedShape.x -= 1
+    }
 
-      if (shapeEnd > dimensions.width - 1) {
-        rotatedShape.x -= 1
-      }
-
-      return rotatedShape
-    }))
+    setShape(rotatedShape)
   }
 
-  const getFullRows = (shapes: Shape[]): number[] => {
-    const inactiveShapes = shapes.filter(({ active }) => !active)
-
-    const inactiveBlocks = inactiveShapes.map(
-      ({ x, y, blocks }) => blocks?.map(
-        (block) => ({ ...block, x: block.x + x, y: block.y + y })
-      )
-    ).flat()
-
-    const inactiveRows = groupBy(inactiveBlocks, 'y')
+  const getFullRows = (): number[] => {
+    const inactiveRows = groupBy(currentBlocks.current, 'y')
 
     const fullRows = Object.entries(inactiveRows)
       .filter(([index, inactiveRow]) => inactiveRow.length > dimensions.width - 1 && index)
@@ -179,83 +175,39 @@ export const GameProvider = ({ children }: any) => {
   }
 
   const cleanupRows = () => {
-    setShapes((currentShapes) => {
-      const fullRows = getFullRows(currentShapes)
+    const filledRows = getFullRows()
 
-      if (!fullRows.length) {
-        return currentShapes
-      }
+    if (!filledRows.length) {
+      return
+    }
 
-      const pointsForAmountRows = [40, 100, 300, 1200]
-      const amountRowsIndex = fullRows.length - 1
+    const pointsForAmountRows = [40, 100, 300, 1200]
+    const amountRowsIndex = filledRows.length - 1
 
-      const newRows = score.rows + fullRows.length
-      const newLevel = Math.floor(newRows / 10) + 1
-      const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * score.level)
+    const newRows = score.rows + filledRows.length
+    const newLevel = Math.floor(newRows / 10) + 1
+    const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * score.level)
 
-      setScore({
-        level: newLevel,
-        score: newScore,
-        rows: newRows,
-      })
-
-      return currentShapes
-        .map((currentShape, index) => {
-          if (currentShape.active) {
-            return currentShape
-          }
-
-          const remainingBlocks = currentShape.blocks
-            .map((inactiveBlock) => {
-              if (includes(fullRows, currentShape.y + inactiveBlock.y)) {
-                return { ...inactiveBlock, dead: true }
-              }
-
-              return inactiveBlock
-            })
-            // .filter((inactiveBlock) => {
-            //   return !includes(fullRows, currentShape.y + inactiveBlock.y)
-            // })
-
-          // const remainingBlocksMoved =
-          //   remainingBlocks.map((inactiveBlock) => {
-          //     const amountToMove = sum(fullRows.map((rowY) => (currentShape.y + inactiveBlock.y) < rowY ? 1 : 0))
-
-          //     return {
-          //       ...inactiveBlock,
-          //       y: inactiveBlock.y + amountToMove
-          //     }
-          //   })
-
-          return {
-            ...currentShape,
-            blocks: remainingBlocks
-          }
-        })
-        .filter((shape) => shape.blocks.length)
+    setScore({
+      level: newLevel,
+      score: newScore,
+      rows: newRows,
     })
 
+    setBlocks(currentBlocks.current.map((currentBlock: Block) => ({
+      ...currentBlock,
+      dead: includes(filledRows, currentBlock.y)
+    })))
+
     setTimeout(() => {
-      setShapes((currentShapes) => {
-        const fullRows = getFullRows(currentShapes)
-
-        return currentShapes.map((currentShape) => {
-          return {
-            ...currentShape,
-            blocks: currentShape.blocks
-              .filter(({ dead }) => !dead)
-              .map((inactiveBlock) => {
-                const amountToMove = sum(fullRows.map((rowY) => (currentShape.y + inactiveBlock.y) < rowY ? 1 : 0))
-
-                return {
-                  ...inactiveBlock,
-                  y: inactiveBlock.y + amountToMove
-                }
-              })
-          }
-        })
-
-      })
+      setBlocks(
+        currentBlocks.current
+          .filter(({ dead }: Block) => !dead)
+          .map((block: Block) => ({
+            ...block,
+            y: block.y + sum(filledRows.map((rowY) => block.y < rowY ? 1 : 0))
+          }))
+      )
     }, 500)
   }
 
@@ -274,13 +226,13 @@ export const GameProvider = ({ children }: any) => {
         setSettings,
         dimensions,
         gameOver,
-        shapes,
-        setShapes,
         moveX,
         moveY,
         drop,
         rotate,
-        score
+        score,
+        blocks,
+        shape
       }}
     >
       {children}

@@ -6,12 +6,13 @@ import { GameContext } from '../../context'
 export const Map = ({ style } : any) => {
   const {
     dimensions,
-    shapes,
+    shape,
+    blocks
   } = useContext(GameContext)
 
   return (
     <SMap style={{style}} width={dimensions?.width} height={dimensions?.height}>
-      { shapes.filter(({ active }) => active).map((shape) => (
+      { shape ? (
         <SMapShape
           key={`shape-active`}
           isActive={true}
@@ -34,30 +35,17 @@ export const Map = ({ style } : any) => {
             />
           )) }
         </SMapShape>
-      )) }
-      { shapes.filter(({ active }) => !active).map((shape: any, index: number) => (
-        <Box
-          key={`shape-${index}`}
+      ) : null }
+      { blocks.map((block: any, index: number) => (
+        <SMapBlock
+          key={`block-${index}`}
+          color={block.color}
+          dead={block.dead}
           s={{
-            position: 'absolute',
-            left: `${shape.x}rem`,
-            top: `${shape.y}rem`,
-            height: shape.height + 'rem',
-            width: shape.width + 'rem'
+            left: `${block.x}rem`,
+            top: `${block.y}rem`
           }}
-        >
-          { shape.blocks.map((block: any, index: number) => (
-            <SMapBlock
-              key={`block-${index}`}
-              color={shape.color}
-              dead={block.dead}
-              s={{
-                left: `${block.x}rem`,
-                top: `${block.y}rem`
-              }}
-            />
-          )) }
-        </Box>
+        />
       )) }
     </SMap>
   )
