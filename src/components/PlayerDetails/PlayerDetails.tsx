@@ -40,14 +40,14 @@ export const PlayerDetails = ({ s }: any) => {
         type={'MOVE'}
         isDesktop={isDesktop}
       >
-        <ChevronLeft size={14} />
+        <ChevronLeft size={isDesktop ? 16 : 18} />
       </PlayerDetailsButton>
       <PlayerDetailsButton
         onPress={() => rotate()}
         type={'SHIFT'}
         isDesktop={isDesktop}
       >
-        <RotateCw size={14} />
+        <RotateCw size={isDesktop ? 16 : 18} />
         <Box>{ isDesktop ? 'SHIFT' : '' }</Box>
       </PlayerDetailsButton>
       <PlayerDetailsButton
@@ -56,14 +56,14 @@ export const PlayerDetails = ({ s }: any) => {
         isDesktop={isDesktop}
       >
         <Box>{ isDesktop ? 'SPACE' : '' }</Box>
-        <ArrowDown size={14} />
+        <ArrowDown size={isDesktop ? 16 : 18} />
       </PlayerDetailsButton>
       <PlayerDetailsButton
         onPress={() => moveX('right')}
         type={'MOVE'}
         isDesktop={isDesktop}
       >
-        <ChevronRight size={14} />
+        <ChevronRight size={isDesktop ? 16 : 18} />
       </PlayerDetailsButton>
     </SPlayerDetails>
   )

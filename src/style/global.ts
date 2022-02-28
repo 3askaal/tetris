@@ -8,8 +8,8 @@ export const LocalGlobalStyle: any = createGlobalStyle<any>({
 
   svg: {
     display: 'block',
-    maxWidth: '16px !important',
-    maxHeight: '16px !important',
+    maxWidth: '20px !important',
+    maxHeight: '20px !important',
     stroke: 'currentcolor !important'
   },
 })

@@ -1,5 +1,6 @@
 import { s, darken, brighten } from '3oilerplate'
 import { transcode } from 'buffer'
+import { colors } from '../../style'
 
 export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
@@ -9,7 +10,7 @@ export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   mt: '1rem'
 }))
 
-export const SPlayerDetailsButton = s.div(({ theme, isDesktop, type, isPressed }: any) => ({
+export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -20,19 +21,21 @@ export const SPlayerDetailsButton = s.div(({ theme, isDesktop, type, isPressed }
   margin: '.25rem',
   flexShrink: 1,
   cursor: 'pointer',
-  backgroundColor: brighten('#000', .6),
+  // backgroundColor: brighten('#000', .6),
+  backgroundColor: darken(colors.background, .4),
   border: '.15rem solid',
   borderRadius: '.25rem',
-  borderLeftColor: brighten('#000', .2),
-  borderBottomColor: brighten('#000', .2),
-  borderTopColor: brighten('#000', .4),
-  borderRightColor: brighten('#000', .4),
+  borderTopColor: darken(colors.background, .8),
+  borderRightColor: darken(colors.background, .8),
+  borderLeftColor: darken(colors.background, 1.2),
+  borderBottomColor: darken(colors.background, 1.2),
   appearance: 'none',
-  outline: 'none !important',
+  outline: '0 !important',
+  '-webkit-tap-highlight-color': 'transparent',
+  transition: 'all .25s ease',
 
   ...(isPressed && {
-    backgroundColor: 'primary',
-    borderColor: 'primaryDark',
+    backgroundColor: darken(colors.background, 1),
   }),
 
   ...isDesktop && ({
