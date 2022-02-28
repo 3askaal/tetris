@@ -1,4 +1,4 @@
-import { find, times, sample, random, minBy, maxBy, last } from 'lodash'
+import { sample, minBy, maxBy } from 'lodash'
 import randomColor from 'randomcolor'
 
 export interface Shape {
@@ -64,34 +64,6 @@ export const generateShape = (dimensions: any) => {
     rotated: false,
     active: true
   };
-
-  // const amountBlocksInShape = 4
-
-  // const startingPoints = [{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 4, y: 0 }, { x: 4, y: 4 }]
-  // const possibleMovements = [{ x: 1, y: 1 } , { x: 1, y: -1 }, { x: -1, y: 1 }, { x: -1, y: -1 }];
-
-  // const cornerIndex = random(3)
-
-  // const startingPoint = startingPoints[cornerIndex]
-  // const possibleMovement = possibleMovements[cornerIndex]
-
-  // times(amountBlocksInShape, (i) => {
-  //   if (i === 0) {
-  //     shape.blocks.push(startingPoint)
-  //   } else {
-  //     let blockExists: any = true
-  //     let nextBlock: any = null
-
-  //     while (blockExists) {
-  //       nextBlock = { ...last(shape.blocks) }
-  //       const randomDirection = sample(['x', 'y']) as 'x' | 'y'
-  //       nextBlock[randomDirection] += possibleMovement[randomDirection]
-  //       blockExists = find(shape.blocks, { ...nextBlock })
-  //     }
-
-  //     shape.blocks.push(nextBlock)
-  //   }
-  // })
 
   shape.blocks = sample(sample(shapes))  as any
 

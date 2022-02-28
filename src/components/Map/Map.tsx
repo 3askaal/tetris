@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { Box } from '3oilerplate'
 import { SMap, SMapBlock, SMapShape } from './Map.styled'
 import { GameContext } from '../../context'
 

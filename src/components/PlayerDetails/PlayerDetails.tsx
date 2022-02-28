@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { Box } from '3oilerplate'
 import { SPlayerDetails, SPlayerDetailsButton } from './PlayerDetails.styled'
 import {
@@ -33,57 +33,37 @@ export const PlayerDetails = ({ s }: any) => {
   const { moveX, drop, rotate } = useContext(GameContext)
 
   return (
-    <SPlayerDetails s={s}>
-      <Box s={{
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <PlayerDetailsButton
-          onPress={() => moveX('left')}
-          isDesktop={isDesktop}
-          type={'MOVE'}
-          s={{
-            // touchAction: isMobile() ? 'auto' : 'none',
-          }}
-        >
-          <ChevronLeft size={14} />
-        </PlayerDetailsButton>
-        <PlayerDetailsButton
-          onPress={() => drop()}
-          isDesktop={isDesktop}
-          type={'SPACE'}
-          s={{
-            // touchAction: isMobile() ? 'auto' : 'none',
-          }}
-        >
-          <Box>{ isDesktop ? 'SPACE' : '' }</Box>
-          <ArrowDown size={14} />
-        </PlayerDetailsButton>
-        <PlayerDetailsButton
-          onPress={() => rotate()}
-          isDesktop={isDesktop}
-          type={'SHIFT'}
-          s={{
-            // touchAction: isMobile() ? 'auto' : 'none',
-          }}
-        >
-          <RotateCw size={14} />
-          <Box>{ isDesktop ? 'SHIFT' : '' }</Box>
-        </PlayerDetailsButton>
-        <PlayerDetailsButton
-          onPress={() => moveX('right')}
-          isDesktop={isDesktop}
-          type={'MOVE'}
-          s={{
-            // touchAction: isMobile() ? 'auto' : 'none',
-          }}
-        >
-          <ChevronRight size={14} />
-        </PlayerDetailsButton>
-      </Box>
+    <SPlayerDetails s={s} isDesktop={isDesktop}>
+      <PlayerDetailsButton
+        onPress={() => moveX('left')}
+        type={'MOVE'}
+        isDesktop={isDesktop}
+      >
+        <ChevronLeft size={14} />
+      </PlayerDetailsButton>
+      <PlayerDetailsButton
+        onPress={() => rotate()}
+        type={'SHIFT'}
+        isDesktop={isDesktop}
+      >
+        <RotateCw size={14} />
+        <Box>{ isDesktop ? 'SHIFT' : '' }</Box>
+      </PlayerDetailsButton>
+      <PlayerDetailsButton
+        onPress={() => drop()}
+        type={'SPACE'}
+        isDesktop={isDesktop}
+      >
+        <Box>{ isDesktop ? 'SPACE' : '' }</Box>
+        <ArrowDown size={14} />
+      </PlayerDetailsButton>
+      <PlayerDetailsButton
+        onPress={() => moveX('right')}
+        type={'MOVE'}
+        isDesktop={isDesktop}
+      >
+        <ChevronRight size={14} />
+      </PlayerDetailsButton>
     </SPlayerDetails>
   )
 }

@@ -40,7 +40,7 @@ const PlayView = () => {
           </Spacer>
         </Box>
         <Map />
-        <PlayerDetails s={{ pt: 'm', display: ['none', 'flex'] }} />
+        <PlayerDetails s={{ display: ['none', 'flex'] }} />
       </Container>
       { gameOver && (
         <Popup
