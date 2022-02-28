@@ -29,9 +29,6 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPresse
   borderRightColor: darken(colors.background, .8),
   borderLeftColor: darken(colors.background, 1.2),
   borderBottomColor: darken(colors.background, 1.2),
-  appearance: 'none',
-  outline: '0 !important',
-  '-webkit-tap-highlight-color': 'transparent',
   transition: 'all .25s ease',
 
   ...(isPressed && {

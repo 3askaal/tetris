@@ -12,4 +12,10 @@ export const LocalGlobalStyle: any = createGlobalStyle<any>({
     maxHeight: '20px !important',
     stroke: 'currentcolor !important'
   },
+
+  button: {
+    appearance: 'none',
+    outline: '0',
+    '-webkit-tap-highlight-color': 'transparent',
+  }
 })
