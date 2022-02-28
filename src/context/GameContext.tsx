@@ -148,16 +148,13 @@ export const GameProvider = ({ children }: any) => {
       y: block.x
     }))
 
-    // const shapeStart = rotatedShape.x
-    // const shapeEnd = rotatedShape.x + rotatedShape.width
+    if (rotatedShape.x < 1) {
+      rotatedShape.x += 1
+    }
 
-    // if (shapeStart < 1) {
-    //   rotatedShape.x += 1
-    // }
-
-    // if (shapeEnd > dimensions.width - 1) {
-    //   rotatedShape.x -= 1
-    // }
+    if (rotatedShape.x + rotatedShape.width > dimensions.width - 1) {
+      rotatedShape.x -= 1
+    }
 
     const hitsBlock = checkShapePosition(rotatedShape)
 
