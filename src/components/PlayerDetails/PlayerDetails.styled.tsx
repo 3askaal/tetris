@@ -6,7 +6,7 @@ export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: ['30rem', '20rem'],
+  maxWidth: ['30rem', '21rem'],
   mt: '1rem'
 }))
 
@@ -21,7 +21,6 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPresse
   margin: '.25rem',
   flexShrink: 1,
   cursor: 'pointer',
-  // backgroundColor: brighten('#000', .6),
   backgroundColor: darken(colors.background, .4),
   border: '.15rem solid',
   borderRadius: '.25rem',

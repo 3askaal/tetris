@@ -1,4 +1,4 @@
-import { s } from '3oilerplate'
+import { s, brighten } from '3oilerplate'
 import chroma from 'chroma-js'
 
 export const SMap = s.div(({ theme, dimensions, width, height }: any) => ({
@@ -6,7 +6,8 @@ export const SMap = s.div(({ theme, dimensions, width, height }: any) => ({
   position: 'relative',
   height: `${height}rem`,
   width: `${width}rem`,
-  backgroundColor: chroma('#000').brighten(.2).hex(),
+  backgroundColor: brighten('#000', .2),
+  boxShadow: '0 0 0 .15rem ' + brighten('#000', .4),
 }))
 
 export const SMapShape = s.div(({ theme, isActive }: any) => ({
