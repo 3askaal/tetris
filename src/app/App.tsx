@@ -12,7 +12,9 @@ import './fonts.css'
 
 export const history = createBrowserHistory()
 
-ReactGA.initialize('G-ELXJS2W0GL')
+ReactGA.initialize('G-ELXJS2W0GL', {
+  testMode: process.env.NODE_ENV !== 'production'
+})
 
 const App = () => {
   return (
