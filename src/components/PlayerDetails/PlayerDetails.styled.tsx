@@ -12,7 +12,7 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPresse
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: ['50px', '50px', '60px'],
+  height: '60px',
   color: darken('white', 0.5),
   flexBasis: '25%',
   flexGrow: 1,
