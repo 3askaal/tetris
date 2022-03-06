@@ -13,14 +13,15 @@ import { useButton } from '@react-aria/button'
 
 const isDesktop = !isMobile()
 
-export const ControlsButton = (props: any) => {
+export const ControlsButton = ({ onPress, ...props }: any) => {
   let ref = useRef<any>();
-  let { buttonProps } = useButton(props, ref);
+  let { buttonProps } = useButton({ onPress, ...props }, ref);
   let { children } = props;
 
   return (
     <SControlsButton
       { ...buttonProps }
+      { ...props }
       ref={ref}
     >
       { children }

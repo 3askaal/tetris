@@ -1,11 +1,11 @@
-import { s, darken, brighten } from '3oilerplate'
+import { s, darken } from '3oilerplate'
 import { colors } from '../../style'
 
 export const SControls = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  // maxWidth: [null, null, '24rem'],
+  maxWidth: [null, null, '24rem'],
 }))
 
 export const SControlsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({
@@ -20,7 +20,8 @@ export const SControlsButton = s.button(({ theme, isDesktop, type, isPressed }: 
   flexShrink: 1,
   cursor: 'pointer',
   backgroundColor: darken(colors.background, .2),
-  border: '.15rem solid',
+  borderWidth: ['.175rem', '.175rem', '.125rem'],
+  borderStyle: 'solid',
   borderTopColor: darken(colors.background, .6),
   borderRightColor: darken(colors.background, .6),
   borderLeftColor: darken(colors.background, 1),

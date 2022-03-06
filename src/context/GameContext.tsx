@@ -4,18 +4,7 @@ import { groupBy, includes, sum } from 'lodash'
 import { Block, generateShape, Shape } from '../helpers/generate';
 import { useInterval } from '../helpers/interval';
 
-interface GameContextType {
-  shape: Shape | null;
-  blocks: Block[];
-  dimensions: { height: number, width: number };
-  [key: string]: any;
-}
-
-export const GameContext = createContext<GameContextType>({
-  shape: null,
-  blocks: [],
-  dimensions: { height: 36, width: 20 }
-})
+export const GameContext = createContext<any>({})
 
 export const GameProvider = ({ children }: any) => {
   const [shape, setShapeState] = useState<Shape | null>(null)
@@ -29,7 +18,7 @@ export const GameProvider = ({ children }: any) => {
   const [gamePaused, setGamePaused] = useState(false)
   const [score, setScore] = useState({ level: 1, score: 0, rows: 0 })
 
-  const onStartGame = (args: any) => {
+  const onStartGame = () => {
     setGameOver(false)
     setScore({ level: 1, score: 0, rows: 0 })
 
@@ -37,7 +26,6 @@ export const GameProvider = ({ children }: any) => {
 
     const newShape = generateShape(dimensions)
     setShape(newShape)
-    currentShape.current = newShape
 
     ReactGA4.event({
       category: "actions",

@@ -14,30 +14,30 @@ export const Map = ({ style } : any) => {
   const [blockSize, setBlockSize] = useState<number>(0)
   const [mapDimensions, setMapDimensions] = useState<any>({})
 
-  const calcMapSize = () => {
-    const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.95
-    const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.95
-
-    const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
-    const evenMapheight = maxMapHeight - (maxMapHeight % 2)
-
-    const blockSizeX = Math.floor(evenMapWidth / (dimensions?.width || 0))
-    const blockSizeY = Math.floor(evenMapheight / (dimensions?.height || 0))
-    const blockSize = min([blockSizeX, blockSizeY]) as number
-
-    setMapDimensions({
-      width: blockSize * dimensions.width,
-      height: blockSize * dimensions.height,
-    })
-
-    setBlockSize(blockSize)
-  }
-
   useEffect(() => {
+    const calcMapSize = () => {
+      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.9
+      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.9
+
+      const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
+      const evenMapheight = maxMapHeight - (maxMapHeight % 2)
+
+      const blockSizeX = Math.floor(evenMapWidth / (dimensions.width || 0))
+      const blockSizeY = Math.floor(evenMapheight / (dimensions.height || 0))
+      const blockSize = min([blockSizeX, blockSizeY]) as number
+
+      setMapDimensions({
+        width: blockSize * dimensions.width,
+        height: blockSize * dimensions.height,
+      })
+
+      setBlockSize(blockSize)
+    }
+
     if (mapRef.current) {
       calcMapSize()
     }
-  }, [mapRef])
+  }, [mapRef, dimensions.width, dimensions.height])
 
   return (
     <div ref={mapRef} style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }}>
