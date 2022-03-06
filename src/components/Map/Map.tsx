@@ -19,8 +19,8 @@ export const Map = ({ style } : any) => {
     let containerWidth = mapRef.current?.getBoundingClientRect().width
     let containerHeight = mapRef.current?.getBoundingClientRect().height
 
-    containerWidth = containerWidth - (containerWidth % 2) * 0.8
-    containerHeight = containerHeight - (containerHeight % 2) * 0.8
+    containerWidth = (containerWidth - (containerWidth % 2)) * 0.95
+    containerHeight = (containerHeight - (containerHeight % 2)) * 0.95
 
     const blockSizeX = Math.floor(containerWidth / (dimensions?.width || 0))
     const blockSizeY = Math.floor(containerHeight / (dimensions?.height || 0))
