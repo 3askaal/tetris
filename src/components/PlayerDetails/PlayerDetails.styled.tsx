@@ -5,7 +5,7 @@ export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: [null, null, '28rem'],
+  maxWidth: [null, null, '24rem'],
 }))
 
 export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({
@@ -16,15 +16,15 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPresse
   color: darken('white', 0.5),
   flexBasis: '25%',
   flexGrow: 1,
-  margin: '.25rem',
+  margin: '.2rem',
   flexShrink: 1,
   cursor: 'pointer',
-  backgroundColor: darken(colors.background, .4),
+  backgroundColor: darken(colors.background, .2),
   border: '.15rem solid',
-  borderTopColor: darken(colors.background, .8),
-  borderRightColor: darken(colors.background, .8),
-  borderLeftColor: darken(colors.background, 1.2),
-  borderBottomColor: darken(colors.background, 1.2),
+  borderTopColor: darken(colors.background, .6),
+  borderRightColor: darken(colors.background, .6),
+  borderLeftColor: darken(colors.background, 1),
+  borderBottomColor: darken(colors.background, 1),
   borderRadius: '.25rem',
   transition: 'all .25s ease',
 
