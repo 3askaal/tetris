@@ -15,13 +15,14 @@ const isDesktop = !isMobile()
 
 export const ControlsButton = ({ onPress, ...props }: any) => {
   let ref = useRef<any>();
-  let { buttonProps } = useButton({ onPress, ...props }, ref);
+  let { buttonProps, isPressed } = useButton({ onPress, ...props }, ref);
   let { children } = props;
 
   return (
     <SControlsButton
       { ...buttonProps }
       { ...props }
+      isPressed={isPressed}
       ref={ref}
     >
       { children }
