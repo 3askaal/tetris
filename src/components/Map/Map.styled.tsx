@@ -4,8 +4,8 @@ import chroma from 'chroma-js'
 export const SMap = s.div(({ theme, dimensions, width, height }: any) => ({
   display: 'flex',
   position: 'relative',
-  height: `${height}rem`,
-  width: `${width}rem`,
+  width: `100%`,
+  height: `100%`,
   backgroundColor: brighten('#000', .2),
   boxShadow: '0 0 0 .15rem ' + brighten('#000', .4),
 }))
@@ -18,8 +18,8 @@ export const SMapShape = s.div(({ theme, isActive }: any) => ({
 
 export const SMapBlock = s.div(({ theme, color = '#fff', dead }: any) => ({
   position: 'absolute',
-  width: '1rem',
-  height: '1rem',
+  width: 'calc(100% / 16)',
+  height: 'calc(100% / 16)',
   border: '0.15rem solid',
   // Light
   borderRightColor: chroma(color).brighten(1).hex(),

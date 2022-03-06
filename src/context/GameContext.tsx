@@ -138,18 +138,13 @@ export const GameProvider = ({ children }: any) => {
       ...currentShape.current,
       width: currentShape.current.height,
       height: currentShape.current.width,
-      rotated: !currentShape.current.rotated,
+      rotated: currentShape.current.rotated < 3 ? currentShape.current.rotated + 1 : 0,
     }
 
     rotatedShape.blocks = currentShape.current.blocks.map((block: Block) => ({
       x: (rotatedShape.width - 1) - block.y,
       y: block.x
     }))
-
-    // if (rotatedShape.x < 1) {
-    //   rotatedShape.x += 1
-    // }
-
 
     if (rotatedShape.width > currentShape.current.width) {
       if (rotatedShape.x + rotatedShape.width > dimensions.width) {

@@ -31,8 +31,8 @@ const PlayView = () => {
 
   return (
     <Wrapper>
-      <Container s={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Box s={{ mb: 'm' }}>
+      <Container s={{ alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box>
           <Spacer size="xs" s={{ flexDirection: 'row' }}>
             <span>Level: { score.level }</span>
             <span>Score: { score.score }</span>

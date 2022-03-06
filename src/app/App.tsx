@@ -21,7 +21,7 @@ const App = () => {
     <ThemeProvider
       theme={{
         ...theme,
-        rootFontSizes: ['8px', '14px', '20px'],
+        rootFontSizes: ['8px', '12px', '18px'],
         fonts: {
           ...theme.fonts,
           ...fonts,
