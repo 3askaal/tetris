@@ -5,14 +5,14 @@ export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: [null, null, '22rem'],
+  maxWidth: [null, null, '28rem'],
 }))
 
 export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: ['60px', '60px', '50px'],
+  height: ['50px', '50px', '60px'],
   color: darken('white', 0.5),
   flexBasis: '25%',
   flexGrow: 1,
@@ -37,12 +37,12 @@ export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPresse
     pointerEvents: 'none',
 
     ...type === 'SPACE' && ({
-      flexBasis: '40%',
+      flexBasis: '45%',
       justifyContent: 'space-between',
     }),
 
     ...type === 'SHIFT' && ({
-      flexBasis: '30%',
+      flexBasis: '25%',
       justifyContent: 'space-between',
     }),
 
