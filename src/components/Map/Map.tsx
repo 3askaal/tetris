@@ -41,33 +41,33 @@ export const Map = ({ style } : any) => {
 
   return (
     <div ref={mapRef} style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }}>
-        <SMap style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
-          { shape ? (
-            <SMapShape
-              key={`shape-active`}
-              shape={shape}
-              blockSize={blockSize}
-            >
-              { shape.blocks.map((block: any, index: number) => (
-                <SMapBlock
-                  key={`block-active-${index}`}
-                  color={shape.color}
-                  blockSize={blockSize}
-                  block={block}
-                />
-              )) }
-            </SMapShape>
-          ) : null }
-          { blocks.map((block: any, index: number) => (
-            <SMapBlock
-              key={`block-${index}`}
-              color={block.color}
-              dead={block.dead}
-              blockSize={blockSize}
-              block={block}
-            />
-          )) }
-        </SMap>
+      <SMap style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
+        { shape ? (
+          <SMapShape
+            key={`shape-active`}
+            shape={shape}
+            blockSize={blockSize}
+          >
+            { shape.blocks.map((block: any, index: number) => (
+              <SMapBlock
+                key={`block-active-${index}`}
+                color={shape.color}
+                blockSize={blockSize}
+                block={block}
+              />
+            )) }
+          </SMapShape>
+        ) : null }
+        { blocks.map((block: any, index: number) => (
+          <SMapBlock
+            key={`block-${index}`}
+            color={block.color}
+            dead={block.dead}
+            blockSize={blockSize}
+            block={block}
+          />
+        )) }
+      </SMap>
     </div>
   )
 }
