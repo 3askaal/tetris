@@ -8,13 +8,14 @@ import { useInterval } from '../helpers/interval';
 interface GameContextType {
   shape: Shape | null;
   blocks: Block[];
-  dimensions?: { height: number, width: number };
+  dimensions: { height: number, width: number };
   [key: string]: any;
 }
 
 export const GameContext = createContext<GameContextType>({
   shape: null,
   blocks: [],
+  dimensions: { height: 36, width: 20 }
 })
 
 export const GameProvider = ({ children }: any) => {

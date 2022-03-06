@@ -1,20 +1,18 @@
 import { s, darken, brighten } from '3oilerplate'
-import { transcode } from 'buffer'
 import { colors } from '../../style'
 
 export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: [null, null, '21rem'],
-  mt: '1rem'
+  maxWidth: [null, null, '22rem'],
 }))
 
 export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: ['3rem', '5rem', '3rem'],
+  height: ['60px', '60px', '50px'],
   color: darken('white', 0.5),
   flexBasis: '25%',
   flexGrow: 1,

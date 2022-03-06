@@ -30,17 +30,19 @@ const PlayView = () => {
   }, [gameOver])
 
   return (
-    <Wrapper>
-      <Container s={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box>
-          <Spacer size="xs" s={{ flexDirection: 'row' }}>
-            <span>Level: { score.level }</span>
-            <span>Score: { score.score }</span>
-            <span>Rows: { score.rows }</span>
-          </Spacer>
-        </Box>
-        <Map />
-        <PlayerDetails s={{ display: ['none', 'flex'] }} />
+    <Wrapper s={{ py: 'm' }}>
+      <Container s={{ p: 0 }}>
+        <Spacer size="xs" s={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
+          <Box>
+            <Spacer size="m" s={{ flexDirection: 'row' }}>
+              <span>Level: { score.level }</span>
+              <span>Score: { score.score }</span>
+              <span>Rows: { score.rows }</span>
+            </Spacer>
+          </Box>
+          <Map />
+          <PlayerDetails s={{ display: ['none', 'flex'] }} />
+        </Spacer>
       </Container>
       { gameOver && (
         <Popup

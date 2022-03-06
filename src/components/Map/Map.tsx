@@ -15,78 +15,78 @@ export const Map = ({ style } : any) => {
   const [blockSize, setBlockSize] = useState<number>(0)
   const [mapDimensions, setMapDimensions] = useState<any>({})
 
-  // const calcMapSize = () => {
-  //   let containerWidth = mapRef.current?.getBoundingClientRect().width
-  //   let containerHeight = mapRef.current?.getBoundingClientRect().height
+  const calcMapSize = () => {
+    let containerWidth = mapRef.current?.getBoundingClientRect().width
+    let containerHeight = mapRef.current?.getBoundingClientRect().height
 
-  //   containerWidth = containerWidth - (containerWidth % 2)
-  //   containerHeight = containerHeight - (containerHeight % 2)
+    containerWidth = containerWidth - (containerWidth % 2) * 0.8
+    containerHeight = containerHeight - (containerHeight % 2) * 0.8
 
-  //   setMapDimensions({
-  //     width: containerWidth * 0.8,
-  //     height: containerHeight * 0.8,
-  //   })
+    const blockSizeX = Math.floor(containerWidth / (dimensions?.width || 0))
+    const blockSizeY = Math.floor(containerHeight / (dimensions?.height || 0))
+    const blockSize = min([blockSizeX, blockSizeY]) as number
 
-  //   console.log(containerWidth * 0.8)
-  //   console.log(containerHeight * 0.8)
+    console.log(blockSizeX)
+    console.log(blockSizeY)
+    console.log(blockSize)
 
-  //   const blockSizeX = containerWidth / (dimensions?.width || 0)
-  //   const blockSizeY = containerHeight / (dimensions?.height || 0)
-  //   const blockSize = min([blockSizeX, blockSizeY]) as number
+    console.log(blockSize)
 
-  //   console.log(blockSizeX)
-  //   console.log(blockSizeY)
-  //   console.log(blockSize)
+    setMapDimensions({
+      width: blockSize * dimensions.width,
+      height: blockSize * dimensions.height,
+    })
 
-  //   setBlockSize(blockSize)
-  // }
+    setBlockSize(blockSize)
+  }
 
   useEffect(() => {
-    // calcMapSize()
-  }, [])
+    if (mapRef.current) {
+      calcMapSize()
+    }
+  }, [mapRef])
 
   return (
-    <Box innerRef={mapRef} s={{ display: 'flex', width: '100%', height: '100%'}}>
-      <SMap style={{style}} s={{
-        width: mapDimensions.width * blockSize,
-        height: mapDimensions.height * blockSize,
-      }}>
-        { shape ? (
-          <SMapShape
-            key={`shape-active`}
-            isActive={true}
-            s={{
-              position: 'absolute',
-              left: `${shape.x * blockSize}px`,
-              top: `${shape.y * blockSize}px`,
-              height: `${shape.height * blockSize}px`,
-              width: `${shape.width * blockSize}px`,
-            }}
-          >
-            { shape.blocks.map((block: any, index: number) => (
-              <SMapBlock
-                key={`block-active-${index}`}
-                color={shape.color}
-                s={{
-                  left: `${block.x * blockSize}px`,
-                  top: `${block.y * blockSize}px`
-                }}
-              />
-            )) }
-          </SMapShape>
-        ) : null }
-        { blocks.map((block: any, index: number) => (
-          <SMapBlock
-            key={`block-${index}`}
-            color={block.color}
-            dead={block.dead}
-            s={{
-              left: `${block.x * blockSize}px`,
-              top: `${block.y * blockSize}px`
-            }}
-          />
-        )) }
-      </SMap>
-    </Box>
+    <div ref={mapRef} style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }}>
+        <SMap style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
+          { shape ? (
+            <SMapShape
+              key={`shape-active`}
+              isActive={true}
+              s={{
+                position: 'absolute',
+                left: `${shape.x * blockSize}px`,
+                top: `${shape.y * blockSize}px`,
+                height: `${shape.height * blockSize}px`,
+                width: `${shape.width * blockSize}px`,
+              }}
+            >
+              { shape.blocks.map((block: any, index: number) => (
+                <SMapBlock
+                  key={`block-active-${index}`}
+                  color={shape.color}
+                  blockSize={blockSize}
+                  s={{
+                    left: `${block.x * blockSize}px`,
+                    top: `${block.y * blockSize}px`
+                  }}
+                />
+              )) }
+            </SMapShape>
+          ) : null }
+          { blocks.map((block: any, index: number) => (
+            <SMapBlock
+              key={`block-${index}`}
+              color={block.color}
+              dead={block.dead}
+              blockSize={blockSize}
+              s={{
+                left: `${block.x * blockSize}px`,
+                top: `${block.y * blockSize}px`
+              }}
+            />
+          )) }
+        </SMap>
+    </div>
   )
 }
