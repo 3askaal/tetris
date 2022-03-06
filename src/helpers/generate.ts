@@ -67,15 +67,11 @@ export const generateShape = (dimensions: any) => {
 
   shape.blocks = sample(sample(shapes))  as any
 
-  const minX = minBy(shape.blocks, 'x')?.x as number
   const maxX = maxBy(shape.blocks, 'x')?.x as number
-  const minY = minBy(shape.blocks, 'y')?.y as number
   const maxY = maxBy(shape.blocks, 'y')?.y as number
 
-  shape.blocks = shape.blocks.map((block) => ({ x: block.x - minX, y: block.y - minY }))
-
-  shape.width = (maxX - minX) + 1
-  shape.height = (maxY - minY) + 1
+  shape.width = maxX + 1
+  shape.height = maxY + 1
   shape.x = Math.floor(dimensions.width / 2) - Math.ceil(shape.width / 2)
 
   return shape

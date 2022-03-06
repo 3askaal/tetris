@@ -4,10 +4,11 @@ import chroma from 'chroma-js'
 export const SMap = s.div(({ theme, dimensions, width, height }: any) => ({
   display: 'flex',
   position: 'relative',
-  height: `${height}rem`,
-  width: `${width}rem`,
+  width: `${width}px`,
+  height: `${height}px`,
+  margin: 'auto',
   backgroundColor: brighten('#000', .2),
-  boxShadow: '0 0 0 .15rem ' + brighten('#000', .4),
+  boxShadow: '0 0 0 2px ' + brighten('#000', .4),
 }))
 
 export const SMapShape = s.div(({ theme, isActive }: any) => ({
@@ -16,11 +17,12 @@ export const SMapShape = s.div(({ theme, isActive }: any) => ({
   // })
 }))
 
-export const SMapBlock = s.div(({ theme, color = '#fff', dead }: any) => ({
+export const SMapBlock = s.div(({ theme, color = '#fff', dead, blockSize }: any) => ({
   position: 'absolute',
-  width: '1rem',
-  height: '1rem',
-  border: '0.15rem solid',
+  width: `${blockSize}px`,
+  height: `${blockSize}px`,
+  border: '.15rem solid',
+  borderWidth: ['2px', '2px', '3px'],
   // Light
   borderRightColor: chroma(color).brighten(1).hex(),
   borderTopColor: chroma(color).brighten(1).hex(),

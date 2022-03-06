@@ -8,13 +8,14 @@ import { useInterval } from '../helpers/interval';
 interface GameContextType {
   shape: Shape | null;
   blocks: Block[];
-  dimensions?: { height: number, width: number };
+  dimensions: { height: number, width: number };
   [key: string]: any;
 }
 
 export const GameContext = createContext<GameContextType>({
   shape: null,
   blocks: [],
+  dimensions: { height: 36, width: 20 }
 })
 
 export const GameProvider = ({ children }: any) => {
@@ -138,18 +139,13 @@ export const GameProvider = ({ children }: any) => {
       ...currentShape.current,
       width: currentShape.current.height,
       height: currentShape.current.width,
-      rotated: !currentShape.current.rotated,
+      rotated: currentShape.current.rotated < 3 ? currentShape.current.rotated + 1 : 0,
     }
 
     rotatedShape.blocks = currentShape.current.blocks.map((block: Block) => ({
       x: (rotatedShape.width - 1) - block.y,
       y: block.x
     }))
-
-    // if (rotatedShape.x < 1) {
-    //   rotatedShape.x += 1
-    // }
-
 
     if (rotatedShape.width > currentShape.current.width) {
       if (rotatedShape.x + rotatedShape.width > dimensions.width) {
