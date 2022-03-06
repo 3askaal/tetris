@@ -1,3 +1,4 @@
 export const fonts: any = {
-  board: "'GoodDog', Helvetica, Arial, sans-serif",
+  base: "'Play', sans-serif",
+  title: "'Play', sans-serif"
 }

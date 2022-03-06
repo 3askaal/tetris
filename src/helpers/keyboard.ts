@@ -1,21 +1,20 @@
 import React, { useContext } from "react"
 import useMousetrap from "react-hook-mousetrap"
-import { GameContext, SocketContext } from "../context"
+import { GameContext } from "../context"
 
 export function useKeyboardBindings() {
-  const { settings, currentPlayer } = useContext(GameContext)
-  const { move, bomb } = useContext(SocketContext)
-  const isLocalGame = settings?.type === 'local'
+  const {
+    gameOver,
+    gamePaused,
+    setGamePaused,
+    moveX,
+    drop,
+    rotate
+  } = useContext(GameContext)
 
-  // useMousetrap('up', () => move({ playerIndex: currentPlayer?.index, direction: 'y', movement: -1 }))
-  // useMousetrap('down', () => move({ playerIndex: currentPlayer?.index, direction: 'y', movement: 1 }))
-  // useMousetrap('left', () => )
-  // useMousetrap('right', () => )
-  // useMousetrap('space', () => )
-
-  // useMousetrap('w', () => isLocalGame && move({ playerIndex: 0, direction: 'y', movement: -1 }))
-  // useMousetrap('s', () => isLocalGame && move({ playerIndex: 0, direction: 'y', movement: 1 }))
-  // useMousetrap('a', () => isLocalGame && move({ playerIndex: 0, direction: 'x', movement: -1 }))
-  // useMousetrap('d', () => isLocalGame && move({ playerIndex: 0, direction: 'x', movement: 1 }))
-  // useMousetrap('shift', () => isLocalGame && bomb({ playerIndex: 0 }))
+  useMousetrap('left', () => (!gameOver && !gamePaused) && moveX('left'))
+  useMousetrap('right', () => (!gameOver && !gamePaused) && moveX('right'))
+  useMousetrap('space', () => (!gameOver && !gamePaused) && drop())
+  useMousetrap('shift', () => (!gameOver && !gamePaused) && rotate())
+  useMousetrap('escape', () => !gameOver && setGamePaused(!gamePaused))
 }

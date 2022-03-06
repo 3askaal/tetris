@@ -1,4 +1,4 @@
-import { sample, minBy, maxBy } from 'lodash'
+import { sample, maxBy } from 'lodash'
 import randomColor from 'randomcolor'
 
 export interface Shape {

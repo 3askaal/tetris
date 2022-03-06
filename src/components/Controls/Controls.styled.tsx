@@ -1,14 +1,14 @@
 import { s, darken, brighten } from '3oilerplate'
 import { colors } from '../../style'
 
-export const SPlayerDetails = s.div(({ theme, isDesktop }: any) => ({
+export const SControls = s.div(({ theme, isDesktop }: any) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: [null, null, '24rem'],
+  // maxWidth: [null, null, '24rem'],
 }))
 
-export const SPlayerDetailsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({
+export const SControlsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

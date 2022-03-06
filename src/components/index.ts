@@ -1,2 +1,3 @@
 export * from './Map/Map'
-export * from './PlayerDetails/PlayerDetails'
+export * from './Controls/Controls'
+export * from './Button/Button'

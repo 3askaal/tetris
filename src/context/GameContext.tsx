@@ -2,7 +2,6 @@ import React, { createContext, useRef, useState } from 'react'
 import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
 import { Block, generateShape, Shape } from '../helpers/generate';
-import useMousetrap from 'react-hook-mousetrap';
 import { useInterval } from '../helpers/interval';
 
 interface GameContextType {
@@ -27,6 +26,7 @@ export const GameProvider = ({ children }: any) => {
   const [settings, setSettings] = useState<any>({})
   const [dimensions] = useState({ height: 36, width: 20 })
   const [gameOver, setGameOver] = useState(false)
+  const [gamePaused, setGamePaused] = useState(false)
   const [score, setScore] = useState({ level: 1, score: 0, rows: 0 })
 
   const onStartGame = (args: any) => {
@@ -211,12 +211,7 @@ export const GameProvider = ({ children }: any) => {
     }, 500)
   }
 
-  useMousetrap('left', () => !gameOver && moveX('left'))
-  useMousetrap('right', () => !gameOver && moveX('right'))
-  useMousetrap('space', () => !gameOver && drop())
-  useMousetrap('shift', () => !gameOver && rotate())
-
-  useInterval(moveY, !gameOver ? 200 : null)
+  useInterval(moveY, (!gameOver && !gamePaused) ? 200 : null)
 
   return (
     <GameContext.Provider
@@ -232,7 +227,9 @@ export const GameProvider = ({ children }: any) => {
         rotate,
         score,
         blocks,
-        shape
+        shape,
+        gamePaused,
+        setGamePaused,
       }}
     >
       {children}

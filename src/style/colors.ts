@@ -1,4 +1,4 @@
-import { darken, brighen } from '3oilerplate'
+import { darken } from '3oilerplate'
 import chroma from 'chroma-js';
 
 const positive = '#66DE93'

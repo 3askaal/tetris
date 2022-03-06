@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
-import { Spacer, Box, Container, Wrapper, Popup, Button, Text } from '3oilerplate'
+import { Spacer, Box, Container, Wrapper, Popup, Text, Button } from '3oilerplate'
 import ReactGA from 'react-ga4'
-import { PlayerDetails, Map } from '../../components'
+import { Controls, Map } from '../../components'
 import { GameContext } from '../../context'
 import ReactGA4 from 'react-ga4'
 import { useKeyboardBindings } from '../../helpers/keyboard'
@@ -10,7 +10,9 @@ const PlayView = () => {
   const {
     onStartGame,
     gameOver,
-    score
+    gamePaused,
+    setGamePaused,
+    score,
   } = useContext(GameContext)
 
   useKeyboardBindings()
@@ -41,7 +43,7 @@ const PlayView = () => {
             </Spacer>
           </Box>
           <Map />
-          <PlayerDetails />
+          <Controls />
         </Spacer>
       </Container>
       { gameOver && (
@@ -50,7 +52,16 @@ const PlayView = () => {
             <Button onClick={() => onStartGame({})}>Restart</Button>
           ]}
         >
-          <Text s={{ textAlign: 'center' }}>You lost! Click restart to play again!</Text>
+          <Text s={{ width: '100%', textAlign: 'center' }}>Game over! Click restart to play again.</Text>
+        </Popup>
+      ) }
+      { gamePaused && (
+        <Popup
+          actions={[
+            <Button onClick={() => setGamePaused(false)}>Resume</Button>
+          ]}
+        >
+          <Text s={{ width: '100%', textAlign: 'center' }}>Game paused! Click resume to continue playing.</Text>
         </Popup>
       ) }
     </Wrapper>
