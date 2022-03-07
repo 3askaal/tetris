@@ -44,11 +44,16 @@ export const GameProvider = ({ children }: any) => {
   }
 
   const checkShapePosition = (nextShape: Shape) => {
-    return currentBlocks.current.some((block: Block) =>
+    const hitsBlock = currentBlocks.current.some((block: Block) =>
       nextShape.blocks.some((nextBlock) =>
         (nextShape.x + nextBlock.x) === block.x && (nextShape.y + nextBlock.y) === block.y
       )
     )
+
+    const hitsBottom = (nextShape.y + nextShape.height) >= dimensions.height + 1
+    const hitsSide = (nextShape.x < 0) || (nextShape.x + nextShape.width > dimensions.width)
+
+    return hitsBlock || hitsBottom || hitsSide
   }
 
   const moveX = (direction: 'left' | 'right') => {
@@ -57,22 +62,14 @@ export const GameProvider = ({ children }: any) => {
       right: 1
     }
 
-    const nextPosStart = currentShape.current.x + movements[direction]
-    const nextPosEnd = currentShape.current.x + currentShape.current.width + movements[direction]
-    const hitsSide = nextPosStart < 0 || nextPosEnd > dimensions.width
-
-    if (hitsSide) {
-      return
-    }
-
     const nextShape = {
       ...currentShape.current,
       x: currentShape.current.x + movements[direction]
     }
 
-    const hitsBlock = checkShapePosition(nextShape)
+    const notAllowed = checkShapePosition(nextShape)
 
-    if (hitsBlock) {
+    if (notAllowed) {
       return
     }
 
@@ -82,13 +79,10 @@ export const GameProvider = ({ children }: any) => {
   const moveY = () => {
     const nextShape: Shape = { ...currentShape.current, y: currentShape.current.y + 1 }
 
-    const hitsBlock = checkShapePosition(nextShape)
-    const hitsBottom = (currentShape.current.y + currentShape.current.height) === dimensions.height
+    const notAllowed = checkShapePosition(nextShape)
+    const isGameOver = notAllowed && currentShape.current.y === 2
 
-    const isHit = hitsBlock || hitsBottom
-    const isGameOver = isHit && currentShape.current.y === 2
-
-    if (isHit) {
+    if (notAllowed) {
       setBlocks([
         ...currentBlocks.current,
         ...currentShape.current.blocks.map((currentBlock: any) => ({
@@ -111,7 +105,7 @@ export const GameProvider = ({ children }: any) => {
       setGameOver(true)
     }
 
-    return isHit
+    return notAllowed
   }
 
   const drop = () => {
@@ -138,6 +132,20 @@ export const GameProvider = ({ children }: any) => {
     if (rotatedShape.width > currentShape.current.width) {
       if (rotatedShape.x + rotatedShape.width > dimensions.width) {
         rotatedShape.x -= (rotatedShape.width - currentShape.current.width)
+      }
+    }
+
+    const widthDiff = rotatedShape.width - currentShape.current.width
+
+    if (widthDiff !== 0) {
+      const movePositive = widthDiff < 0
+      const positiveDiff = Math.abs(widthDiff)
+      const moveAmount = positiveDiff === 3 ? rotatedShape.rotated > 1 ? 2 : 1 : positiveDiff
+
+      if (movePositive) {
+        rotatedShape.x += moveAmount
+      } else {
+        rotatedShape.x -= moveAmount
       }
     }
 

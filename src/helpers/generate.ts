@@ -9,7 +9,7 @@ export interface Shape {
   x: number;
   y: number;
   active: boolean;
-  rotated: boolean;
+  rotated: number;
 }
 
 export interface Block {
@@ -54,6 +54,10 @@ const shapes = [
 ]
 
 export const generateShape = (dimensions: any) => {
+  console.log('=====================')
+  console.log('=====================')
+  console.log('=====================')
+
   const shape: Shape = {
     color: randomColor(),
     blocks: [],
@@ -61,7 +65,7 @@ export const generateShape = (dimensions: any) => {
     height: 0,
     x: 0,
     y: 2,
-    rotated: false,
+    rotated: 3,
     active: true
   };
 
