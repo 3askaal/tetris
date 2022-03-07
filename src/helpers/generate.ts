@@ -54,10 +54,6 @@ const shapes = [
 ]
 
 export const generateShape = (dimensions: any) => {
-  console.log('=====================')
-  console.log('=====================')
-  console.log('=====================')
-
   const shape: Shape = {
     color: randomColor(),
     blocks: [],
