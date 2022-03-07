@@ -12,7 +12,7 @@ export const SControlsButton = s.button(({ theme, isDesktop, type, isPressed }: 
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: '60px',
+  height: ['3rem', '4rem', '3rem'],
   color: darken('white', 0.5),
   flexBasis: '25%',
   flexGrow: 1,
@@ -53,7 +53,6 @@ export const SControlsButton = s.button(({ theme, isDesktop, type, isPressed }: 
   }),
 
   'svg': {
-    strokeWidth: 3,
-    stroke: 'white'
+    strokeWidth: 2,
   }
 }))

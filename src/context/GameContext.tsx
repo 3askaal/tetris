@@ -135,19 +135,27 @@ export const GameProvider = ({ children }: any) => {
       }
     }
 
-    const widthDiff = rotatedShape.width - currentShape.current.width
+    // const widthDiff = rotatedShape.width - currentShape.current.width
 
-    if (widthDiff !== 0) {
-      const movePositive = widthDiff < 0
-      const positiveDiff = Math.abs(widthDiff)
-      const moveAmount = positiveDiff === 3 ? rotatedShape.rotated > 1 ? 2 : 1 : positiveDiff
+    // if (widthDiff !== 0) {
+    //   const movePositive = widthDiff < 0
+    //   const positiveDiff = Math.abs(widthDiff)
+    //   const moveAmount = positiveDiff === 3 ? rotatedShape.rotated > 1 ? 2 : 1 : positiveDiff
 
-      if (movePositive) {
-        rotatedShape.x += moveAmount
-      } else {
-        rotatedShape.x -= moveAmount
-      }
-    }
+    //   if (movePositive) {
+    //     rotatedShape.x += moveAmount
+    //   } else {
+    //     rotatedShape.x -= moveAmount
+    //   }
+
+    //   if (rotatedShape.x < 0) {
+    //     rotatedShape.x = 0
+    //   }
+
+    //   if (rotatedShape.x + rotatedShape.width >= dimensions.width) {
+    //     rotatedShape.x = dimensions.width
+    //   }
+    // }
 
     const hitsBlock = checkShapePosition(rotatedShape)
 
