@@ -9,8 +9,8 @@ export const GameContext = createContext<any>({})
 export const GameProvider = ({ children }: any) => {
   const [shape, setShapeState] = useState<Shape | null>(null)
   const [blocks, setBlocksState] = useState<Block[]>([])
-  const currentShape = useRef<any>(null)
-  const currentBlocks = useRef<any>([])
+  const shapeRef = useRef<any>(null)
+  const blocksRef = useRef<any>([])
 
   const [settings, setSettings] = useState<any>({})
   const [dimensions] = useState({ height: 36, width: 20 })
@@ -34,17 +34,17 @@ export const GameProvider = ({ children }: any) => {
   }
 
   const setShape = (shape: Shape | null) => {
-    currentShape.current = shape
+    shapeRef.current = shape
     setShapeState(shape)
   }
 
   const setBlocks = (blocks: any) => {
-    currentBlocks.current = blocks
+    blocksRef.current = blocks
     setBlocksState(blocks)
   }
 
   const checkShapePosition = (nextShape: Shape) => {
-    const hitsBlock = currentBlocks.current.some((block: Block) =>
+    const hitsBlock = blocksRef.current.some((block: Block) =>
       nextShape.blocks.some((nextBlock) =>
         (nextShape.x + nextBlock.x) === block.x && (nextShape.y + nextBlock.y) === block.y
       )
@@ -63,79 +63,82 @@ export const GameProvider = ({ children }: any) => {
     }
 
     const nextShape = {
-      ...currentShape.current,
-      x: currentShape.current.x + movements[direction]
+      ...shapeRef.current,
+      x: shapeRef.current.x + movements[direction]
     }
 
-    const notAllowed = checkShapePosition(nextShape)
+    const isHit = checkShapePosition(nextShape)
 
-    if (notAllowed) {
+    if (isHit) {
       return
     }
 
     setShape(nextShape)
   }
 
-  const moveY = () => {
-    const nextShape: Shape = { ...currentShape.current, y: currentShape.current.y + 1 }
+  const moveY = (shouldUpdateState: boolean = true) => {
+    const nextShape: Shape = { ...shapeRef.current, y: shapeRef.current.y + 1 }
+    const isHit = checkShapePosition(nextShape)
+    const isGameOver = isHit && shapeRef.current.y === 2
 
-    const notAllowed = checkShapePosition(nextShape)
-    const isGameOver = notAllowed && currentShape.current.y === 2
-
-    if (notAllowed) {
+    if (isHit) {
       setBlocks([
-        ...currentBlocks.current,
-        ...currentShape.current.blocks.map((currentBlock: any) => ({
+        ...blocksRef.current,
+        ...shapeRef.current.blocks.map((currentBlock: any) => ({
           ...currentBlock,
-          x: currentShape.current.x + currentBlock.x,
-          y: currentShape.current.y + currentBlock.y,
-          color: currentShape.current.color
+          x: shapeRef.current.x + currentBlock.x,
+          y: shapeRef.current.y + currentBlock.y,
+          color: shapeRef.current.color
         })),
       ])
 
       setShape(generateShape(dimensions))
       cleanupRows()
     } else {
-      setShape(nextShape)
+      if (shouldUpdateState) {
+        setShape(nextShape)
+      } else {
+        shapeRef.current = nextShape
+      }
     }
 
     if (isGameOver) {
-      currentShape.current = null
+      shapeRef.current = null
       setShape(null)
       setGameOver(true)
     }
 
-    return notAllowed
+    return isHit
   }
 
   const drop = () => {
     let isHit = false
 
     while (!isHit) {
-      isHit = moveY()
+      isHit = moveY(false)
     }
   }
 
   const rotate = () => {
     const rotatedShape = {
-      ...currentShape.current,
-      width: currentShape.current.height,
-      height: currentShape.current.width,
-      rotated: currentShape.current.rotated < 3 ? currentShape.current.rotated + 1 : 0,
+      ...shapeRef.current,
+      width: shapeRef.current.height,
+      height: shapeRef.current.width,
+      rotated: shapeRef.current.rotated < 3 ? shapeRef.current.rotated + 1 : 0,
     }
 
-    rotatedShape.blocks = currentShape.current.blocks.map((block: Block) => ({
+    rotatedShape.blocks = shapeRef.current.blocks.map((block: Block) => ({
       x: (rotatedShape.width - 1) - block.y,
       y: block.x
     }))
 
-    if (rotatedShape.width > currentShape.current.width) {
+    if (rotatedShape.width > shapeRef.current.width) {
       if (rotatedShape.x + rotatedShape.width > dimensions.width) {
-        rotatedShape.x -= (rotatedShape.width - currentShape.current.width)
+        rotatedShape.x -= (rotatedShape.width - shapeRef.current.width)
       }
     }
 
-    // const widthDiff = rotatedShape.width - currentShape.current.width
+    // const widthDiff = rotatedShape.width - shapeRef.current.width
 
     // if (widthDiff !== 0) {
     //   const movePositive = widthDiff < 0
@@ -167,7 +170,7 @@ export const GameProvider = ({ children }: any) => {
   }
 
   const getFilledRows = (): number[] => {
-    const inactiveRows = groupBy(currentBlocks.current, 'y')
+    const inactiveRows = groupBy(blocksRef.current, 'y')
 
     const fullRows = Object.entries(inactiveRows)
       .filter(([index, inactiveRow]) => inactiveRow.length > dimensions.width - 1 && index)
@@ -196,14 +199,14 @@ export const GameProvider = ({ children }: any) => {
       rows: newRows,
     })
 
-    setBlocks(currentBlocks.current.map((currentBlock: Block) => ({
+    setBlocks(blocksRef.current.map((currentBlock: Block) => ({
       ...currentBlock,
       dead: includes(filledRows, currentBlock.y)
     })))
 
     setTimeout(() => {
       setBlocks(
-        currentBlocks.current
+        blocksRef.current
           .filter(({ dead }: Block) => !dead)
           .map((block: Block) => ({
             ...block,
