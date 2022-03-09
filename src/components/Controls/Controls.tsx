@@ -34,7 +34,7 @@ export const ControlsButton = ({ onPress, ...props }: any) => {
 export const Controls = ({ s }: any) => {
   const { moveX, drop, rotate } = useContext(GameContext)
   const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop');
-  const isDesktop = !isMobile() && breakpoint === 'desktop'
+  const isDesktop = !isMobile({ tablet: true }) && breakpoint === 'desktop'
 
   return (
     <SControls s={s} isDesktop={isDesktop}>
