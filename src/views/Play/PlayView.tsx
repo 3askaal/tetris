@@ -32,7 +32,7 @@ const PlayView = () => {
   }, [gameOver])
 
   return (
-    <Wrapper s={{ py: 'm' }}>
+    <Wrapper s={{ p: 's' }}>
       <Container s={{ p: 0 }}>
         <Spacer size="xs" s={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
           <Box>

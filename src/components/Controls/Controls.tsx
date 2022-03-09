@@ -43,14 +43,14 @@ export const Controls = ({ s }: any) => {
         type={'MOVE'}
         isDesktop={isDesktop}
       >
-        <ChevronLeft size={isDesktop ? 16 : 18} />
+        <ChevronLeft size={14} />
       </ControlsButton>
       <ControlsButton
         onPress={() => rotate()}
         type={'SHIFT'}
         isDesktop={isDesktop}
       >
-        <RotateCw size={isDesktop ? 16 : 18} />
+        <RotateCw size={14} />
         <Box>{ isDesktop ? 'SHIFT' : '' }</Box>
       </ControlsButton>
       <ControlsButton
@@ -59,14 +59,14 @@ export const Controls = ({ s }: any) => {
         isDesktop={isDesktop}
       >
         <Box>{ isDesktop ? 'SPACE' : '' }</Box>
-        <ArrowDown size={isDesktop ? 16 : 18} />
+        <ArrowDown size={14} />
       </ControlsButton>
       <ControlsButton
         onPress={() => moveX('right')}
         type={'MOVE'}
         isDesktop={isDesktop}
       >
-        <ChevronRight size={isDesktop ? 16 : 18} />
+        <ChevronRight size={14} />
       </ControlsButton>
     </SControls>
   )
