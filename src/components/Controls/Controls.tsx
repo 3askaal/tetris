@@ -10,8 +10,9 @@ import {
 import isMobile from 'is-mobile'
 import { GameContext } from '../../context'
 import { useButton } from '@react-aria/button'
+import useBreakpoint from 'use-breakpoint';
 
-const isDesktop = !isMobile()
+const BREAKPOINTS = { mobile: 0, desktop: 768 }
 
 export const ControlsButton = ({ onPress, ...props }: any) => {
   let ref = useRef<any>();
@@ -32,6 +33,8 @@ export const ControlsButton = ({ onPress, ...props }: any) => {
 
 export const Controls = ({ s }: any) => {
   const { moveX, drop, rotate } = useContext(GameContext)
+  const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop');
+  const isDesktop = !isMobile() && breakpoint === 'desktop'
 
   return (
     <SControls s={s} isDesktop={isDesktop}>

@@ -30,7 +30,7 @@ export const SMapBlock = s.div(({ theme, color = '#fff', dead, blockSize, block 
   width: `${blockSize}px`,
   height: `${blockSize}px`,
   border: '.15rem solid',
-  borderWidth: ['2px', '2px', '3px'],
+  borderWidth: '.175rem',
   // Light
   borderRightColor: chroma(color).brighten(1).hex(),
   borderTopColor: chroma(color).brighten(1).hex(),
