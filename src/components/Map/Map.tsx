@@ -37,7 +37,7 @@ export const Map = ({ style } : any) => {
     if (mapRef.current) {
       calcMapSize()
     }
-  }, [mapRef, dimensions.width, dimensions.height])
+  }, [mapRef, dimensions?.width, dimensions?.height])
 
   return (
     <div ref={mapRef} style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }}>
@@ -58,7 +58,7 @@ export const Map = ({ style } : any) => {
             )) }
           </SMapShape>
         ) : null }
-        { blocks.map((block: any, index: number) => (
+        { blocks ? blocks.map((block: any, index: number) => (
           <SMapBlock
             key={`block-${index}`}
             color={block.color}
@@ -66,7 +66,7 @@ export const Map = ({ style } : any) => {
             blockSize={blockSize}
             block={block}
           />
-        )) }
+        )) : null }
       </SMap>
     </div>
   )
