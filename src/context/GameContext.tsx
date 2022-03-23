@@ -5,9 +5,10 @@ import { Block, generateShape, Shape } from '../helpers/generate';
 import { useInterval } from '../helpers/interval';
 
 export const GameContext = createContext<any>({
+  shape: generateShape({ height: 36, width: 20 }),
   dimensions: { height: 36, width: 20 },
   score: { level: 1, score: 0, rows: 0 },
-  onStartGame: () => {}
+  onStartGame: () => {},
 })
 
 export const GameProvider = ({ children }: any) => {
@@ -68,7 +69,7 @@ export const GameProvider = ({ children }: any) => {
 
     const nextShape = {
       ...shapeRef.current,
-      x: shapeRef.current.x + movements[direction]
+      x: shapeRef.current?.x + movements[direction]
     }
 
     const isHit = checkShapePosition(nextShape)
@@ -81,7 +82,7 @@ export const GameProvider = ({ children }: any) => {
   }
 
   const moveY = (shouldUpdateState: boolean = true) => {
-    const nextShape: Shape = { ...shapeRef.current, y: shapeRef.current.y + 1 }
+    const nextShape: Shape = { ...shapeRef.current, y: shapeRef.current?.y + 1 }
     const isHit = checkShapePosition(nextShape)
     const isGameOver = isHit && shapeRef.current.y === 2
 

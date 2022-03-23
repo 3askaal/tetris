@@ -16,8 +16,8 @@ export const Map = ({ style } : any) => {
 
   useEffect(() => {
     const calcMapSize = () => {
-      const maxMapWidth = mapRef.current?.getBoundingClientRect().width
-      const maxMapHeight = mapRef.current?.getBoundingClientRect().height
+      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.9
+      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.8
 
       const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
       const evenMapheight = maxMapHeight - (maxMapHeight % 2)
@@ -39,17 +39,23 @@ export const Map = ({ style } : any) => {
     }
   }, [mapRef, dimensions?.width, dimensions?.height])
 
+  useEffect(() => {
+    console.log(shape)
+  }, [shape])
+
   return (
     <div ref={mapRef} style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }}>
       <SMap style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
         { shape ? (
           <SMapShape
+            data-testid="shape-active"
             key={`shape-active`}
             shape={shape}
             blockSize={blockSize}
           >
             { shape.blocks.map((block: any, index: number) => (
               <SMapBlock
+                data-testid="shape-active-block"
                 key={`block-active-${index}`}
                 color={shape.color}
                 blockSize={blockSize}
@@ -60,6 +66,7 @@ export const Map = ({ style } : any) => {
         ) : null }
         { blocks ? blocks.map((block: any, index: number) => (
           <SMapBlock
+            data-testid="shape-block"
             key={`block-${index}`}
             color={block.color}
             dead={block.dead}

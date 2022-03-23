@@ -12,7 +12,7 @@ export const SMap = s.div(({ theme, dimensions, width, height }: any) => ({
   boxShadow: '0 0 0 2px ' + brighten('#000', .4),
 }))
 
-export const SMapShape: any = styled.div.attrs(({ shape, blockSize }: any) => ({
+export const SMapShape: any = styled.div.attrs(({ shape, blockSize = 20 }: any) => ({
   style: {
     position: 'absolute',
     left: `${shape.x * blockSize}px`,

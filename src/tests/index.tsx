@@ -1,7 +1,8 @@
 import customRender from './render'
 
-export * from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
 export {
+  screen,
   customRender as render
 }

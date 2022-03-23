@@ -41,6 +41,7 @@ export const Controls = ({ s }: any) => {
       <ControlsButton
         onPress={() => moveX('left')}
         type={'MOVE'}
+        data-testid="move-left"
         isDesktop={isDesktop}
       >
         <ChevronLeft size={14} />
@@ -48,6 +49,7 @@ export const Controls = ({ s }: any) => {
       <ControlsButton
         onPress={() => rotate()}
         type={'SHIFT'}
+        data-testid="rotate"
         isDesktop={isDesktop}
       >
         <RotateCw size={14} />
@@ -56,6 +58,7 @@ export const Controls = ({ s }: any) => {
       <ControlsButton
         onPress={() => drop()}
         type={'SPACE'}
+        data-testid="drop"
         isDesktop={isDesktop}
       >
         <Box>{ isDesktop ? 'SPACE' : '' }</Box>
@@ -64,6 +67,7 @@ export const Controls = ({ s }: any) => {
       <ControlsButton
         onPress={() => moveX('right')}
         type={'MOVE'}
+        data-testid="move-right"
         isDesktop={isDesktop}
       >
         <ChevronRight size={14} />
