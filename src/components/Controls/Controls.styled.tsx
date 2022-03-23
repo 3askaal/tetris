@@ -6,6 +6,8 @@ export const SControls = s.div(({ theme, isDesktop }: any) => ({
   flexDirection: 'row',
   width: '100%',
   maxWidth: [null, '22rem', '22rem', '22rem'],
+  fontFamily: "'Open Sans', Arial, sans-serif",
+  fontSize: '.75rem',
 }))
 
 export const SControlsButton = s.button(({ theme, isDesktop, type, isPressed }: any) => ({

@@ -1,4 +1,4 @@
 export const fonts: any = {
-  base: "'Roboto', sans-serif",
-  title: "'Roboto', sans-serif"
+  base: "monospace, sans-serif",
+  title: "monospace, sans-serif"
 }

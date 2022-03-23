@@ -9,7 +9,8 @@ export const SApp = s.div(
     width: '100%',
     height: '100%',
     flexGrow: 1,
-    fontSize: '.8em'
+    fontSize: '.8em',
+    fontWeight: 600,
   }),
   fontSize,
 )
