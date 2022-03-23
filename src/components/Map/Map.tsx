@@ -16,8 +16,8 @@ export const Map = ({ style } : any) => {
 
   useEffect(() => {
     const calcMapSize = () => {
-      const maxMapWidth = mapRef.current?.getBoundingClientRect().width
-      const maxMapHeight = mapRef.current?.getBoundingClientRect().height
+      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.9
+      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.8
 
       const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
       const evenMapheight = maxMapHeight - (maxMapHeight % 2)
