@@ -39,13 +39,9 @@ export const Map = ({ style } : any) => {
     }
   }, [mapRef, dimensions?.width, dimensions?.height])
 
-  useEffect(() => {
-    console.log(shape)
-  }, [shape])
-
   return (
     <div ref={mapRef} style={{ display: 'flex', width: (mapDimensions.width || '100%'), height: (mapDimensions.height || '80%') }}>
-      <SMap style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
+      <SMap data-testid="map" style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
         { shape ? (
           <SMapShape
             data-testid="shape-active"

@@ -4,12 +4,14 @@ import { groupBy, includes, sum } from 'lodash'
 import { Block, generateShape, Shape } from '../helpers/generate';
 import { useInterval } from '../helpers/interval';
 
-export const GameContext = createContext<any>({
+export const GameContextDefaults = {
   shape: generateShape({ height: 36, width: 20 }),
   dimensions: { height: 36, width: 20 },
   score: { level: 1, score: 0, rows: 0 },
   onStartGame: () => {},
-})
+}
+
+export const GameContext = createContext<any>(GameContextDefaults)
 
 export const GameProvider = ({ children }: any) => {
   const [shape, setShapeState] = useState<Shape | null>(null)

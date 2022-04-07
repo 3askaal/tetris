@@ -1,23 +1,58 @@
 import React from 'react';
 import "jest-styled-components";
-import { render, screen } from '../../tests';
+import { last } from "lodash";
+import { render, screen, fireEvent, waitFor } from '../../tests';
+import "@testing-library/jest-dom";
 import PlayView from './PlayView';
+import { act } from 'react-dom/test-utils';
 
-test('renders learn react link', () => {
-  const tree = render(<PlayView />).root;
+let callback: jest.Mock<any, any>
 
-  // const activeShape = tree.find()
-  // const activeShape = screen.getByTestId('shape-active')
-  // const moveLeft = screen.getByTestId('move-left')
-  // const rotate = screen.getByTestId('rotate')
-  // const drop = screen.getByTestId('drop')
-  // const moveRight = screen.getByTestId('move-right')
+const getLastContext = () => last(callback.mock.calls)[0]
 
-  // expect(activeShape).toHaveStyle('top: 40px;')
-  // expect(activeShape).toHaveStyleRule('top', '40px')
-  // expect(activeShape.style.left).toBe(0)
+beforeEach(() => {
+  callback = jest.fn();
+  render(<PlayView />, { callback })
 
+  act(() => {
+    callback.mock.calls[0][0].onStartGame()
+  })
+})
+
+test('moves right', async () => {
+  const shapeX = getLastContext().shape.x
+
+  act(() => {
+    getLastContext().moveX('right')
+  })
+
+  expect(getLastContext().shape.x).toEqual(shapeX + 1);
 });
+
+test('moves left', async () => {
+  const shapeX = getLastContext().shape.x
+
+  act(() => {
+    getLastContext().moveX('left')
+  })
+
+  expect(getLastContext().shape.x).toEqual(shapeX - 1);
+});
+
+// test('moves left', async () => {
+//   // const moveRightButton = screen.getByTestId('move-left')
+
+//   // expect(getLastContext().shape.y).toEqual(2);
+//   expect(getLastContext().shape.x).toEqual(9);
+
+//   act(() => {
+//     callback.mock.calls[0][0].moveX('left')
+//   })
+
+//   expect(callback.mock.calls[2][0].shape.x).toEqual(9);
+// });
+
+
 
 
 // describe('Nav', () => {

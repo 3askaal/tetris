@@ -1,8 +1,8 @@
-import customRender from './render'
+import render from './render'
 
-import { screen } from '@testing-library/react'
+export * from '@testing-library/react'
 
-export {
-  screen,
-  customRender as render
-}
+export const waitForData = (time: number = 0) =>
+  new Promise((res) => setTimeout(res, time))
+
+export { render }
