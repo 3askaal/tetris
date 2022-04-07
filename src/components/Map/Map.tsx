@@ -16,8 +16,8 @@ export const Map = ({ style } : any) => {
 
   useEffect(() => {
     const calcMapSize = () => {
-      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.9
-      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.8
+      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.95
+      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.95
 
       const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
       const evenMapheight = maxMapHeight - (maxMapHeight % 2)
@@ -44,7 +44,7 @@ export const Map = ({ style } : any) => {
   }, [shape])
 
   return (
-    <div ref={mapRef} style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }}>
+    <div ref={mapRef} style={{ display: 'flex', width: (mapDimensions.width || '100%'), height: (mapDimensions.height || '80%') }}>
       <SMap style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
         { shape ? (
           <SMapShape
