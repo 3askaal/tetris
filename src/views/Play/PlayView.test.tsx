@@ -39,6 +39,19 @@ test('moves left', async () => {
   expect(getLastContext().shape.x).toEqual(shapeX - 1);
 });
 
+test('drop', async () => {
+  const shapeY = getLastContext().shape.y
+
+  await waitFor(() => {
+    getLastContext().drop()
+  })
+
+  await waitFor(() => {
+    expect(getLastContext().shape.y).toEqual(shapeY);
+  })
+
+});
+
 // test('moves left', async () => {
 //   // const moveRightButton = screen.getByTestId('move-left')
 

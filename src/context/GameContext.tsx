@@ -243,7 +243,7 @@ export const GameProvider = ({ children }: any) => {
         blocks,
         shape,
         gamePaused,
-        setGamePaused,
+        setGamePaused
       }}
     >
       {children}
