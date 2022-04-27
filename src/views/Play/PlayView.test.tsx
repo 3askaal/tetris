@@ -9,6 +9,7 @@ import { act } from 'react-dom/test-utils';
 let callback: jest.Mock<any, any>
 
 const getLastContext = () => last(callback.mock.calls)[0]
+const getAllFromContext = (key: string) => callback.mock.calls.map(([ item ]) => item[key]);
 
 beforeEach(() => {
   callback = jest.fn();
@@ -42,13 +43,13 @@ test('moves left', async () => {
 test('drop', async () => {
   const shapeY = getLastContext().shape.y
 
-  await waitFor(() => {
-    getLastContext().drop()
+  act(() => {
+    getLastContext().moveY()
   })
 
-  await waitFor(() => {
-    expect(getLastContext().shape.y).toEqual(shapeY);
-  })
+  console.log(getAllFromContext('shape'))
+
+  expect(getLastContext().shape.y).toEqual(shapeY + 1);
 
 });
 
