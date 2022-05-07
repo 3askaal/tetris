@@ -39,20 +39,19 @@ const PlayView = () => {
   const isDesktop = !isMobile({ tablet: true }) && breakpoint === 'desktop'
 
   return (
-    <Wrapper s={{ p: ['s', 's', 'm'] }}>
+    <Wrapper s={{ p: ['s', 'm', 'l'] }}>
       <Container s={{ p: 0 }}>
-        <Box s={{ display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems: 'center' }}>
-          <Box s={{ display: 'flex', flexGrow: 1, alignItems: 'flex-end' }}>
+        <Box s={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+          <Box s={{ display: 'flex', alignItems: 'flex-end' }}>
             <Score />
           </Box>
           <Map />
           <Box s={{
             display: 'flex',
             width: '100%',
-            flexGrow: 1,
             alignItems: 'flex-end',
             justifyContent: 'center',
-            marginTop: 'm',
+            mt: 's'
           }}>
             <Controls />
           </Box>

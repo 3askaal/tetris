@@ -2,11 +2,9 @@ import { s, brighten } from '3oilerplate'
 import chroma from 'chroma-js'
 import styled from 'styled-components'
 
-export const SMap = s.div(({ theme, dimensions, width, height }: any) => ({
+export const SMap = s.div(() => ({
   display: 'flex',
   position: 'relative',
-  width: `${width}px`,
-  height: `${height}px`,
   margin: 'auto',
   backgroundColor: brighten('#000', .2),
   boxShadow: '0 0 0 2px ' + brighten('#000', .4),
