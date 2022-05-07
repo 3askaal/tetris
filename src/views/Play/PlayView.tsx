@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { Spacer, Box, Container, Wrapper, Popup, Text, Button } from '3oilerplate'
+import { Box, Container, Wrapper, Popup, Text, Button } from '3oilerplate'
 import ReactGA from 'react-ga4'
-import isMobile from 'is-mobile'
 import { Controls, Map, Score } from '../../components'
 import { GameContext } from '../../context'
 import ReactGA4 from 'react-ga4'
@@ -16,7 +15,6 @@ const PlayView = () => {
     gameOver,
     gamePaused,
     setGamePaused,
-    score,
   } = useContext(GameContext)
 
   useKeyboardBindings()
@@ -36,7 +34,6 @@ const PlayView = () => {
   }, [gameOver])
 
   const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop');
-  const isDesktop = !isMobile({ tablet: true }) && breakpoint === 'desktop'
 
   return (
     <Wrapper s={{ p: ['s', 'm', 'l'] }}>
