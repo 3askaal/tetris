@@ -37,7 +37,7 @@ export const Map = ({ style } : any) => {
     if (mapRef.current) {
       calcMapSize()
     }
-  }, [mapRef, dimensions?.width, dimensions?.height])
+  }, [mapRef, mapRef.current, dimensions?.width, dimensions?.height])
 
   return (
     <div ref={mapRef} style={{ width: mapDimensions.width || '100%', height: mapDimensions.height || '100%' }}>
