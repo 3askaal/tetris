@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useState } from 'react'
+import React, { createContext, Dispatch, SetStateAction, useRef, useState } from 'react'
 import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
 import { Block, generateShape, Shape } from '../helpers/generate';
@@ -13,14 +13,18 @@ interface Score {
   rows: number;
 }
 export interface GameContextType {
-  shape: Shape;
+  shape: Shape | null;
   blocks: Block[];
   dimensions: Dimensions;
   score: Score;
+  gameOver: boolean;
+  gamePaused: boolean;
+  setGamePaused: Dispatch<SetStateAction<boolean>>;
   onStartGame(): void;
   drop(): void;
   moveY(): void;
   moveX(direction: string): void;
+  rotate(): void;
 }
 
 export const GameContextDefaults = {
@@ -28,22 +32,24 @@ export const GameContextDefaults = {
   blocks: [],
   dimensions: { height: 36, width: 20 },
   score: { level: 1, score: 0, rows: 0 },
+  gameOver: false,
+  gamePaused: false,
+  setGamePaused: () => false,
   onStartGame: () => {},
   drop: () => {},
   moveY: () => {},
   moveX: () => {},
+  rotate: () => {},
 }
 
 export const GameContext = createContext<GameContextType>(GameContextDefaults)
 
 export const GameProvider = ({ children }: any) => {
-  const [shape, setShapeState] = useState<Shape | null>(null)
+  const [shape, setShapeState] = useState<Shape | null>(generateShape({ height: 36, width: 20 }))
   const [blocks, setBlocksState] = useState<Block[]>([])
   const shapeRef = useRef<any>(null)
   const gameHasStarted = useRef(false)
   const blocksRef = useRef<any>([])
-
-  const [settings, setSettings] = useState<any>({})
   const [dimensions] = useState({ height: 36, width: 20 })
   const [gameOver, setGameOver] = useState(false)
   const [gamePaused, setGamePaused] = useState(false)
@@ -239,8 +245,6 @@ export const GameProvider = ({ children }: any) => {
     <GameContext.Provider
       value={{
         onStartGame,
-        settings,
-        setSettings,
         dimensions,
         gameOver,
         moveX,

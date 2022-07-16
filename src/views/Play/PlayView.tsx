@@ -57,7 +57,7 @@ const PlayView = () => {
       { gameOver && (
         <Popup
           actions={[
-            <Button onClick={() => onStartGame({})}>Restart</Button>
+            <Button onClick={() => onStartGame()}>Restart</Button>
           ]}
         >
           <Text s={{ width: '100%', textAlign: 'center' }}>Game over! Click restart to play again.</Text>
