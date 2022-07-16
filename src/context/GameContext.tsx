@@ -3,20 +3,44 @@ import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
 import { Block, generateShape, Shape } from '../helpers/generate';
 import { useInterval } from '../helpers/interval';
+interface Dimensions {
+  width: number;
+  height: number;
+}
+interface Score {
+  level: number;
+  score: number;
+  rows: number;
+}
+export interface GameContextType {
+  shape: Shape;
+  blocks: Block[];
+  dimensions: Dimensions;
+  score: Score;
+  onStartGame(): void;
+  drop(): void;
+  moveY(): void;
+  moveX(direction: string): void;
+}
 
 export const GameContextDefaults = {
   shape: generateShape({ height: 36, width: 20 }),
+  blocks: [],
   dimensions: { height: 36, width: 20 },
   score: { level: 1, score: 0, rows: 0 },
   onStartGame: () => {},
+  drop: () => {},
+  moveY: () => {},
+  moveX: () => {},
 }
 
-export const GameContext = createContext<any>(GameContextDefaults)
+export const GameContext = createContext<GameContextType>(GameContextDefaults)
 
 export const GameProvider = ({ children }: any) => {
   const [shape, setShapeState] = useState<Shape | null>(null)
   const [blocks, setBlocksState] = useState<Block[]>([])
   const shapeRef = useRef<any>(null)
+  const gameHasStarted = useRef(false)
   const blocksRef = useRef<any>([])
 
   const [settings, setSettings] = useState<any>({})
@@ -26,6 +50,7 @@ export const GameProvider = ({ children }: any) => {
   const [score, setScore] = useState({ level: 1, score: 0, rows: 0 })
 
   const onStartGame = () => {
+    gameHasStarted.current = true;
     setGameOver(false)
     setScore({ level: 1, score: 0, rows: 0 })
 
@@ -83,8 +108,11 @@ export const GameProvider = ({ children }: any) => {
     setShape(nextShape)
   }
 
-  const moveY = (shouldUpdateState: boolean = true) => {
-    const nextShape: Shape = { ...shapeRef.current, y: shapeRef.current?.y + 1 }
+  const moveY = async (shouldUpdateState: boolean = true) => {
+    if (!gameHasStarted.current) throw new Error('Game has not been started yet');
+    if (!shapeRef.current) throw new Error('Could not find active shape');
+
+    const nextShape: Shape = { ...shapeRef.current, y: shapeRef.current.y + 1 }
     const isHit = checkShapePosition(nextShape)
     const isGameOver = isHit && shapeRef.current.y === 2
 
@@ -110,7 +138,6 @@ export const GameProvider = ({ children }: any) => {
     }
 
     if (isGameOver) {
-      shapeRef.current = null
       setShape(null)
       setGameOver(true)
     }
@@ -118,11 +145,11 @@ export const GameProvider = ({ children }: any) => {
     return isHit
   }
 
-  const drop = () => {
+  const drop = async () => {
     let isHit = false
 
     while (!isHit) {
-      isHit = moveY(false)
+      isHit = await moveY(false)
     }
   }
 
@@ -144,28 +171,6 @@ export const GameProvider = ({ children }: any) => {
         rotatedShape.x -= (rotatedShape.width - shapeRef.current.width)
       }
     }
-
-    // const widthDiff = rotatedShape.width - shapeRef.current.width
-
-    // if (widthDiff !== 0) {
-    //   const movePositive = widthDiff < 0
-    //   const positiveDiff = Math.abs(widthDiff)
-    //   const moveAmount = positiveDiff === 3 ? rotatedShape.rotated > 1 ? 2 : 1 : positiveDiff
-
-    //   if (movePositive) {
-    //     rotatedShape.x += moveAmount
-    //   } else {
-    //     rotatedShape.x -= moveAmount
-    //   }
-
-    //   if (rotatedShape.x < 0) {
-    //     rotatedShape.x = 0
-    //   }
-
-    //   if (rotatedShape.x + rotatedShape.width >= dimensions.width) {
-    //     rotatedShape.x = dimensions.width
-    //   }
-    // }
 
     const hitsBlock = checkShapePosition(rotatedShape)
 
@@ -225,7 +230,10 @@ export const GameProvider = ({ children }: any) => {
     }, 500)
   }
 
-  useInterval(moveY, (!gameOver && !gamePaused) ? 200 : null)
+  useInterval(() => {
+    moveY()
+
+  }, (!gameOver && !gamePaused) ? 200 : null)
 
   return (
     <GameContext.Provider
