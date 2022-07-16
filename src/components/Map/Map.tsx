@@ -16,8 +16,8 @@ export const Map = ({ style } : any) => {
 
   useEffect(() => {
     const calcMapSize = () => {
-      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.95
-      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.95
+      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.98
+      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.98
 
       const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
       const evenMapheight = maxMapHeight - (maxMapHeight % 2)
@@ -27,8 +27,8 @@ export const Map = ({ style } : any) => {
       const blockSize = min([blockSizeX, blockSizeY]) as number
 
       setMapDimensions({
-        width: blockSize * dimensions.width,
-        height: blockSize * dimensions.height,
+        width: blockSize * dimensions.width + 'px',
+        height: blockSize * dimensions.height + 'px',
       })
 
       setBlockSize(blockSize)
@@ -37,11 +37,11 @@ export const Map = ({ style } : any) => {
     if (mapRef.current) {
       calcMapSize()
     }
-  }, [mapRef, dimensions?.width, dimensions?.height])
+  }, [mapRef, mapRef.current, dimensions?.width, dimensions?.height])
 
   return (
-    <div ref={mapRef} style={{ display: 'flex', width: (mapDimensions.width || '100%'), height: (mapDimensions.height || '80%') }}>
-      <SMap data-testid="map" style={{style}} width={mapDimensions.width} height={mapDimensions.height}>
+    <div ref={mapRef} style={{ width: mapDimensions.width || '100%', height: mapDimensions.height || '100%' }}>
+      <SMap s={{ width: mapDimensions.width || '100%', height: mapDimensions.height || '100%' }} >
         { shape ? (
           <SMapShape
             data-testid="shape-active"

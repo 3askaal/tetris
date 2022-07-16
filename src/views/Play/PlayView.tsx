@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { Spacer, Box, Container, Wrapper, Popup, Text, Button } from '3oilerplate'
+import { Box, Container, Wrapper, Popup, Text, Button } from '3oilerplate'
 import ReactGA from 'react-ga4'
-import isMobile from 'is-mobile'
 import { Controls, Map, Score } from '../../components'
 import { GameContext } from '../../context'
 import ReactGA4 from 'react-ga4'
@@ -16,7 +15,6 @@ const PlayView = () => {
     gameOver,
     gamePaused,
     setGamePaused,
-    score,
   } = useContext(GameContext)
 
   useKeyboardBindings()
@@ -36,23 +34,21 @@ const PlayView = () => {
   }, [gameOver])
 
   const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop');
-  const isDesktop = !isMobile({ tablet: true }) && breakpoint === 'desktop'
 
   return (
-    <Wrapper s={{ p: ['s', 's', 'm'] }}>
+    <Wrapper s={{ p: ['s', 'm', 'l'] }}>
       <Container s={{ p: 0 }}>
-        <Box s={{ display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems: 'center' }}>
-          <Box s={{ display: 'flex', flexGrow: 1, alignItems: 'flex-end' }}>
+        <Box s={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+          <Box s={{ display: 'flex', alignItems: 'flex-end' }}>
             <Score />
           </Box>
           <Map />
           <Box s={{
             display: 'flex',
             width: '100%',
-            flexGrow: 1,
             alignItems: 'flex-end',
             justifyContent: 'center',
-            marginTop: 'm',
+            mt: 's'
           }}>
             <Controls />
           </Box>
