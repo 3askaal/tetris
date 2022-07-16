@@ -19,8 +19,7 @@ export interface Block {
   dead?: boolean;
 }
 
-
-const shapes = [
+export const SHAPE_BLOCKS = [
   [
     // lines
     [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }],
@@ -53,7 +52,7 @@ const shapes = [
   ]
 ]
 
-export const generateShape = (dimensions: any) => {
+export const generateShape = (dimensions: any, initialShapeBlocks?: any) => {
   const shape: Shape = {
     color: randomColor(),
     blocks: [],
@@ -65,7 +64,7 @@ export const generateShape = (dimensions: any) => {
     active: true
   };
 
-  shape.blocks = sample(sample(shapes))  as any
+  shape.blocks = initialShapeBlocks || sample(sample(SHAPE_BLOCKS))  as any
 
   const maxX = maxBy(shape.blocks, 'x')?.x as number
   const maxY = maxBy(shape.blocks, 'y')?.y as number

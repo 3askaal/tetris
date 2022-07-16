@@ -1,26 +1,31 @@
-import React, { createContext, Dispatch, SetStateAction, useRef, useState } from 'react'
+import React, { createContext, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import ReactGA4 from 'react-ga4'
 import { groupBy, includes, sum } from 'lodash'
 import { Block, generateShape, Shape } from '../helpers/generate';
 import { useInterval } from '../helpers/interval';
-interface Dimensions {
+
+export interface Dimensions {
   width: number;
   height: number;
 }
-interface Score {
+
+export interface Score {
   level: number;
   score: number;
   rows: number;
 }
+
 export interface GameContextType {
   shape: Shape | null;
+  setShape: any;
   blocks: Block[];
+  setBlocks: Dispatch<SetStateAction<Block[]>>;
   dimensions: Dimensions;
   score: Score;
   gameOver: boolean;
   gamePaused: boolean;
   setGamePaused: Dispatch<SetStateAction<boolean>>;
-  onStartGame(): void;
+  onStartGame(initialShape?: Shape): void;
   drop(): void;
   moveY(): void;
   moveX(direction: string): void;
@@ -29,12 +34,14 @@ export interface GameContextType {
 
 export const GameContextDefaults = {
   shape: generateShape({ height: 36, width: 20 }),
+  setShape: () => {},
   blocks: [],
+  setBlocks: () => {},
   dimensions: { height: 36, width: 20 },
   score: { level: 1, score: 0, rows: 0 },
   gameOver: false,
   gamePaused: false,
-  setGamePaused: () => false,
+  setGamePaused: () => {},
   onStartGame: () => {},
   drop: () => {},
   moveY: () => {},
@@ -55,15 +62,12 @@ export const GameProvider = ({ children }: any) => {
   const [gamePaused, setGamePaused] = useState(false)
   const [score, setScore] = useState({ level: 1, score: 0, rows: 0 })
 
-  const onStartGame = () => {
+  const onStartGame = (initialShape = generateShape(dimensions)) => {
     gameHasStarted.current = true;
     setGameOver(false)
     setScore({ level: 1, score: 0, rows: 0 })
-
     setBlocks([])
-
-    const newShape = generateShape(dimensions)
-    setShape(newShape)
+    setShape(initialShape)
 
     ReactGA4.event({
       category: "actions",
@@ -86,10 +90,10 @@ export const GameProvider = ({ children }: any) => {
       nextShape.blocks.some((nextBlock) =>
         (nextShape.x + nextBlock.x) === block.x && (nextShape.y + nextBlock.y) === block.y
       )
-    )
+    );
 
-    const hitsBottom = (nextShape.y + nextShape.height) >= dimensions.height + 1
-    const hitsSide = (nextShape.x < 0) || (nextShape.x + nextShape.width > dimensions.width)
+    const hitsBottom = (nextShape.y + nextShape.height) >= dimensions.height + 1;
+    const hitsSide = (nextShape.x < 0) || (nextShape.x + nextShape.width > dimensions.width);
 
     return hitsBlock || hitsBottom || hitsSide
   }
@@ -134,7 +138,6 @@ export const GameProvider = ({ children }: any) => {
       ])
 
       setShape(generateShape(dimensions))
-      cleanupRows()
     } else {
       if (shouldUpdateState) {
         setShape(nextShape)
@@ -164,7 +167,6 @@ export const GameProvider = ({ children }: any) => {
       ...shapeRef.current,
       width: shapeRef.current.height,
       height: shapeRef.current.width,
-      rotated: shapeRef.current.rotated < 3 ? shapeRef.current.rotated + 1 : 0,
     }
 
     rotatedShape.blocks = shapeRef.current.blocks.map((block: Block) => ({
@@ -178,16 +180,16 @@ export const GameProvider = ({ children }: any) => {
       }
     }
 
-    const hitsBlock = checkShapePosition(rotatedShape)
+    const isHit = checkShapePosition(rotatedShape)
 
-    if (hitsBlock) {
+    if (isHit) {
       return
     }
 
     setShape(rotatedShape)
   }
 
-  const getFilledRows = (): number[] => {
+  const getFullRows = (): number[] => {
     const inactiveRows = groupBy(blocksRef.current, 'y')
 
     const fullRows = Object.entries(inactiveRows)
@@ -197,17 +199,17 @@ export const GameProvider = ({ children }: any) => {
     return fullRows
   }
 
-  const cleanupRows = () => {
-    const filledRows = getFilledRows()
+  const checkBlocks = () => {
+    const fullRows = getFullRows()
 
-    if (!filledRows.length) {
+    if (!fullRows.length) {
       return
     }
 
     const pointsForAmountRows = [40, 100, 300, 1200]
-    const amountRowsIndex = filledRows.length - 1
+    const amountRowsIndex = fullRows.length - 1
 
-    const newRows = score.rows + filledRows.length
+    const newRows = score.rows + fullRows.length
     const newLevel = Math.floor(newRows / 10) + 1
     const newScore = score.score + (pointsForAmountRows[amountRowsIndex] * score.level)
 
@@ -219,7 +221,7 @@ export const GameProvider = ({ children }: any) => {
 
     setBlocks(blocksRef.current.map((currentBlock: Block) => ({
       ...currentBlock,
-      dead: includes(filledRows, currentBlock.y)
+      dead: includes(fullRows, currentBlock.y)
     })))
 
     setTimeout(() => {
@@ -229,16 +231,19 @@ export const GameProvider = ({ children }: any) => {
           .map((block: Block) => ({
             ...block,
             y: block.y + sum(
-              filledRows.map((rowY) => block.y < rowY ? 1 : 0)
+              fullRows.map((rowY) => block.y < rowY ? 1 : 0)
             )
           }))
       )
     }, 500)
   }
 
+  useEffect(() => {
+    checkBlocks()
+  }, [blocks.length])
+
   useInterval(() => {
     moveY()
-
   }, (!gameOver && !gamePaused) ? 200 : null)
 
   return (
@@ -253,7 +258,9 @@ export const GameProvider = ({ children }: any) => {
         rotate,
         score,
         blocks,
+        setBlocks,
         shape,
+        setShape,
         gamePaused,
         setGamePaused
       }}
