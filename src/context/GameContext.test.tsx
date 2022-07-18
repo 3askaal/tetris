@@ -13,36 +13,61 @@ jest.mock('react-ga4', () => ({
 const ReactGA4EventMock = ReactGA4.event as jest.Mock;
 
 describe('<GameContext />', () => {
-  let currentGameData: GameContextType = GameContextDefaults;
+  let currentContext: GameContextType = GameContextDefaults;
 
   function mountGameDataProvider() {
     render(
       <GameProvider><TestComponent /></GameProvider>
     );
-    if (currentGameData === null) throw new Error('Game data was not set');
-    return currentGameData;
+    if (currentContext === null) throw new Error('Game data was not set');
+    return currentContext;
+  }
+
+  function mountGameDataProviderWithMock(mockedValue: any) {
+    render(
+      <GameContext.Provider value={mockedValue}><TestComponent /></GameContext.Provider>
+    );
+    if (currentContext === null) throw new Error('Game data was not set');
+    return currentContext;
   }
 
   function TestComponent() {
-    currentGameData = useContext(GameContext);
+    currentContext = useContext(GameContext);
     return null;
   }
 
-  function genBottomBlocks (rows = 1, cols = 1) {
-    act(() => currentGameData.setBlocks(
+  function genBottomBlocks (rows = 1, cols = 1, bottomStartingIndex = 35) {
+    act(() => currentContext.setBlocks(
       times(rows, (rowIndex) =>
         times(cols, (colIndex) => ({
           x: colIndex,
-          y: 35 - rowIndex
+          y: bottomStartingIndex - rowIndex
         }))
       ).flat()
     ))
   }
 
   beforeEach(() => {
-    currentGameData = mountGameDataProvider();
+    currentContext = mountGameDataProvider();
   });
 
+  describe.skip('general', () => {
+    it('runs moveY function with interval', () => {
+      jest.useFakeTimers();
+      const moveYSpy = jest.fn();
+      currentContext = mountGameDataProviderWithMock({
+        ...currentContext,
+        moveY: moveYSpy
+      });
+
+      act(() => currentContext.onStartGame());
+      act(() => { jest.advanceTimersByTime(2000) })
+
+      expect(moveYSpy).toHaveBeenCalled()
+
+      jest.useRealTimers()
+    })
+  })
 
   describe('onStartGame()', () => {
     it('submits a game start event', () => {
@@ -59,139 +84,160 @@ describe('<GameContext />', () => {
 
   describe("moveX('left')", () => {
     it('move block left', () => {
-      act(() => currentGameData.onStartGame());
-      const expectedShapeX = currentGameData.shape!.x - 1
-      act(() => currentGameData.moveX('left'));
+      act(() => currentContext.onStartGame());
+      const expectedShapeX = currentContext.shape!.x - 1
+      act(() => currentContext.moveX('left'));
 
-      expect(currentGameData.shape!.x).toBe(expectedShapeX);
+      expect(currentContext.shape!.x).toBe(expectedShapeX);
     });
   });
 
   describe("moveX('right')", () => {
     it('move block right', () => {
-      act(() => currentGameData.onStartGame());
-      const expectedShapeX = currentGameData.shape!.x + 1
-      act(() => currentGameData.moveX('right'));
+      act(() => currentContext.onStartGame());
+      const expectedShapeX = currentContext.shape!.x + 1
+      act(() => currentContext.moveX('right'));
 
-      expect(currentGameData.shape!.x).toBe(expectedShapeX);
+      expect(currentContext.shape!.x).toBe(expectedShapeX);
     });
 
     it('move block right fails (hits side)', () => {
-      act(() => currentGameData.onStartGame());
-      act(() => currentGameData.setShape({ ...currentGameData.shape, x: currentGameData.dimensions.width - currentGameData.shape!.width }));
-      const expectedShapeX = currentGameData.shape!.x
-      act(() => currentGameData.moveX('right'));
+      act(() => currentContext.onStartGame());
+      act(() => currentContext.setShape({ ...currentContext.shape, x: currentContext.dimensions.width - currentContext.shape!.width }));
+      const expectedShapeX = currentContext.shape!.x
+      act(() => currentContext.moveX('right'));
 
-      expect(currentGameData.shape!.x).toBe(expectedShapeX);
+      expect(currentContext.shape!.x).toBe(expectedShapeX);
     });
   });
 
   describe('moveY()', () => {
     it('move block down', async () => {
-      act(() => currentGameData.onStartGame());
-      const expectedShapeY = currentGameData.shape!.y + 1
-      await act(() => currentGameData.moveY());
+      act(() => currentContext.onStartGame());
+      const expectedShapeY = currentContext.shape!.y + 1
+      await act(() => currentContext.moveY());
 
-      expect(currentGameData.shape!.y).toBe(expectedShapeY);
+      expect(currentContext.shape!.y).toBe(expectedShapeY);
     });
   });
 
   describe('drop()', () => {
     it('drops block to bottom', async () => {
-      act(() => currentGameData.onStartGame());
-      const expectedBlocksLength = currentGameData.shape!.blocks.length
-      const initialShape = currentGameData.shape
-      await act(() => currentGameData.drop());
+      act(() => currentContext.onStartGame());
+      const expectedBlocksLength = currentContext.shape!.blocks.length
+      const initialShape = currentContext.shape
+      await act(() => currentContext.drop());
 
-      expect(currentGameData.shape).not.toEqual(initialShape);
-      expect(currentGameData.blocks.length).toBe(expectedBlocksLength);
+      expect(currentContext.shape).not.toEqual(initialShape);
+      expect(currentContext.blocks.length).toBe(expectedBlocksLength);
     });
 
     it('drops block to blocks at bottom', async () => {
-      act(() => currentGameData.onStartGame());
-      genBottomBlocks(1, currentGameData.dimensions.width)
-      const expectedBlocksLength = currentGameData.dimensions.width + currentGameData.shape!.blocks.length
+      act(() => currentContext.onStartGame());
+      genBottomBlocks(1, currentContext.dimensions.width)
+      const expectedBlocksLength = currentContext.dimensions.width + currentContext.shape!.blocks.length
 
-      await act(() => currentGameData.drop());
-      expect(currentGameData.blocks.length).toBe(expectedBlocksLength);
+      await act(() => currentContext.drop());
+      expect(currentContext.blocks.length).toBe(expectedBlocksLength);
     });
   });
 
   describe('rotate()', () => {
     it('rotates block', () => {
-      act(() => currentGameData.onStartGame());
-      const expectedBlocksWidth = currentGameData.shape!.height
-      const expectedBlocksHeight = currentGameData.shape!.width
-      const notEpectedBlocks = currentGameData.shape!.blocks
-      act(() => currentGameData.rotate());
+      act(() => currentContext.onStartGame());
+      const expectedBlocksWidth = currentContext.shape!.height
+      const expectedBlocksHeight = currentContext.shape!.width
+      const notEpectedBlocks = currentContext.shape!.blocks
+      act(() => currentContext.rotate());
 
-      expect(currentGameData.shape!.width).toBe(expectedBlocksWidth);
-      expect(currentGameData.shape!.height).toBe(expectedBlocksHeight);
-      expect(currentGameData.blocks).not.toEqual(notEpectedBlocks);
+      expect(currentContext.shape!.width).toBe(expectedBlocksWidth);
+      expect(currentContext.shape!.height).toBe(expectedBlocksHeight);
+      expect(currentContext.blocks).not.toEqual(notEpectedBlocks);
     });
 
     it('rotates block fails (hits block)', () => {
-      act(() => currentGameData.onStartGame());
-      const initialShape = currentGameData.shape;
-      genBottomBlocks(currentGameData.dimensions.height, currentGameData.dimensions.width)
-      act(() => currentGameData.rotate());
+      act(() => currentContext.onStartGame());
+      const initialShape = currentContext.shape;
+      genBottomBlocks(currentContext.dimensions.height, currentContext.dimensions.width)
+      act(() => currentContext.rotate());
 
-      expect(initialShape).toEqual(currentGameData.shape)
+      expect(initialShape).toEqual(currentContext.shape)
     });
 
     it('rotates and repositions block when close to side', () => {
-      act(() => currentGameData.onStartGame(generateShape({ height: 36, width: 20 }, SHAPE_BLOCKS[0][1])));
-      act(() => currentGameData.setShape({ ...currentGameData.shape, x: currentGameData.dimensions.width - 1 }));
-      const initialShapeX = currentGameData.shape!.x;
+      act(() => currentContext.onStartGame(generateShape({ height: 36, width: 20 }, SHAPE_BLOCKS[0][1])));
+      act(() => currentContext.setShape({ ...currentContext.shape, x: currentContext.dimensions.width - 1 }));
+      const initialShapeX = currentContext.shape!.x;
 
-      act(() => currentGameData.rotate());
+      act(() => currentContext.rotate());
 
-      expect(currentGameData.shape!.x).not.toBe(initialShapeX)
+      expect(currentContext.shape!.x).not.toBe(initialShapeX)
     });
   });
 
+  describe('blocks', () => {
+    it('clear completed rows and keep non-completed exisiting', () => {
+      jest.useFakeTimers();
+
+      act(() => currentContext.onStartGame());
+
+      genBottomBlocks(1, currentContext.dimensions.width)
+      genBottomBlocks(1, currentContext.dimensions.width / 2, 34)
+
+      act(() => {
+        jest.advanceTimersByTime(1000)
+      })
+
+      expect(currentContext.score.rows).toBe(1);
+      expect(currentContext.score.score).toBe(40);
+      expect(currentContext.blocks.length).toBe(currentContext.dimensions.width / 2);
+
+      jest.useRealTimers()
+    });
+  })
+
   describe('score', () => {
     it('completes 1 row', () => {
-      act(() => currentGameData.onStartGame());
-      genBottomBlocks(1, currentGameData.dimensions.width)
+      act(() => currentContext.onStartGame());
+      genBottomBlocks(1, currentContext.dimensions.width)
 
-      expect(currentGameData.score.rows).toBe(1);
-      expect(currentGameData.score.score).toBe(40);
+      expect(currentContext.score.rows).toBe(1);
+      expect(currentContext.score.score).toBe(40);
     });
 
     it('completes 2 rows', () => {
-      act(() => currentGameData.onStartGame());
-      genBottomBlocks(2, currentGameData.dimensions.width)
+      act(() => currentContext.onStartGame());
+      genBottomBlocks(2, currentContext.dimensions.width)
 
-      expect(currentGameData.score.rows).toBe(2);
-      expect(currentGameData.score.score).toBe(100);
+      expect(currentContext.score.rows).toBe(2);
+      expect(currentContext.score.score).toBe(100);
     });
 
     it('completes 3 rows', () => {
-      act(() => currentGameData.onStartGame());
-      genBottomBlocks(3, currentGameData.dimensions.width)
+      act(() => currentContext.onStartGame());
+      genBottomBlocks(3, currentContext.dimensions.width)
 
-      expect(currentGameData.score.rows).toBe(3);
-      expect(currentGameData.score.score).toBe(300);
+      expect(currentContext.score.rows).toBe(3);
+      expect(currentContext.score.score).toBe(300);
     });
 
     it('completes 4 rows', () => {
-      act(() => currentGameData.onStartGame());
-      genBottomBlocks(4, currentGameData.dimensions.width)
+      act(() => currentContext.onStartGame());
+      genBottomBlocks(4, currentContext.dimensions.width)
 
-      expect(currentGameData.score.rows).toBe(4);
-      expect(currentGameData.score.score).toBe(1200);
+      expect(currentContext.score.rows).toBe(4);
+      expect(currentContext.score.score).toBe(1200);
     });
   });
 
   describe('gameOver', () => {
     it('sets game over state when no space left', async () => {
-      act(() => currentGameData.onStartGame());
-      genBottomBlocks(currentGameData.dimensions.height, currentGameData.dimensions.width)
-      await act(() => currentGameData.moveY());
+      act(() => currentContext.onStartGame());
+      genBottomBlocks(currentContext.dimensions.height, currentContext.dimensions.width)
+      await act(() => currentContext.moveY());
 
-      expect(currentGameData.gameOver).toBe(true);
-      expect(currentGameData.shape).toBe(null);
+      expect(currentContext.gameOver).toBe(true);
+      expect(currentContext.shape).toBe(null);
     });
   })
 });
