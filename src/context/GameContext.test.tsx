@@ -8,9 +8,11 @@ import { generateShape, SHAPE_BLOCKS } from '../helpers/generate'
 jest.mock('react-ga4', () => ({
   ...jest.requireActual('react-ga4'),
   event: jest.fn(),
+  send: jest.fn(),
 }));
 
 const ReactGA4EventMock = ReactGA4.event as jest.Mock;
+const ReactGA4SendMock = ReactGA4.send as jest.Mock;
 
 describe('<GameContext />', () => {
   let currentContext: GameContextType = GameContextDefaults;

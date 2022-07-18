@@ -2,21 +2,20 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { ThemeProvider, theme } from '3oilerplate'
 import { MemoryRouter } from 'react-router-dom'
-import { GameContext, GameProvider } from '../context'
+import { GameContext, GameContextDefaults } from '../context'
 
 const wrapper = (
   ui: any,
-  { history, value: mockedValue, theme: mockedTheme, callback, ...options }: any = {},
+  { history, value: mockedValue, theme: mockedTheme, ...options }: any = {},
 ) => {
   return render(
-    <GameProvider>
+    <GameContext.Provider value={{ ...GameContextDefaults, ...mockedValue }}>
       <ThemeProvider theme={{ ...theme, ...mockedTheme }}>
         <MemoryRouter initialEntries={history} initialIndex={0}>
           {ui}
         </MemoryRouter>
       </ThemeProvider>
-      <GameContext.Consumer>{callback}</GameContext.Consumer>
-    </GameProvider>,
+    </GameContext.Provider>,
     options,
   )
 }

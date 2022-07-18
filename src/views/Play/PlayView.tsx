@@ -3,11 +3,7 @@ import { Box, Container, Wrapper, Popup, Text, Button } from '3oilerplate'
 import ReactGA from 'react-ga4'
 import { Controls, Map, Score } from '../../components'
 import { GameContext } from '../../context'
-import ReactGA4 from 'react-ga4'
 import { useKeyboardBindings } from '../../helpers/keyboard'
-import useBreakpoint from 'use-breakpoint'
-
-const BREAKPOINTS = { mobile: 0, desktop: 768 }
 
 const PlayView = () => {
   const {
@@ -23,17 +19,6 @@ const PlayView = () => {
     ReactGA.send({ hitType: "pageview", page: "/play" });
     onStartGame()
   }, [])
-
-  useEffect(() => {
-    if (gameOver) {
-      ReactGA4.event({
-        category: "actions",
-        action: "game:over",
-      });
-    }
-  }, [gameOver])
-
-  const { breakpoint } = useBreakpoint(BREAKPOINTS, 'desktop');
 
   return (
     <Wrapper s={{ p: ['s', 'm', 'l'] }}>
@@ -57,7 +42,7 @@ const PlayView = () => {
       { gameOver && (
         <Popup
           actions={[
-            <Button onClick={() => onStartGame()}>Restart</Button>
+            <Button data-testid="restart" onClick={() => onStartGame()}>Restart</Button>
           ]}
         >
           <Text s={{ width: '100%', textAlign: 'center' }}>Game over! Click restart to play again.</Text>
@@ -66,7 +51,7 @@ const PlayView = () => {
       { gamePaused && (
         <Popup
           actions={[
-            <Button onClick={() => setGamePaused(false)}>Resume</Button>
+            <Button data-testid="resume" onClick={() => setGamePaused(false)}>Resume</Button>
           ]}
         >
           <Text s={{ width: '100%', textAlign: 'center' }}>Game paused! Click resume to continue playing.</Text>

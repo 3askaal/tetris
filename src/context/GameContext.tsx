@@ -242,6 +242,15 @@ export const GameProvider = ({ children }: any) => {
     checkBlocks()
   }, [blocks.length])
 
+  useEffect(() => {
+    if (gameOver) {
+      ReactGA4.event({
+        category: "actions",
+        action: "game:over",
+      });
+    }
+  }, [gameOver])
+
   useInterval(() => {
     moveY()
   }, (!gameOver && !gamePaused) ? 200 : null)
