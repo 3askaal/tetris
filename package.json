@@ -54,6 +54,7 @@
       "src/**/*.{ts,tsx}"
     ],
     "transformIgnorePatterns": [
+      "/src/*.(ts|tsx)",
       "/node_modules/(?!(use-breakpoint|react-hook-mousetrap)/)"
     ]
   },

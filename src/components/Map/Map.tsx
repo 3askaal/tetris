@@ -3,8 +3,8 @@ import { SMap, SMapBlock, SMapShape } from './Map.styled'
 import { GameContext } from '../../context'
 import { min } from 'lodash'
 
-export const Map = ({ style } : any) => {
-  const mapRef = useRef<any>()
+export const Map = () => {
+  const mapRef = useRef<any>(null)
   const {
     dimensions,
     shape,
@@ -12,32 +12,28 @@ export const Map = ({ style } : any) => {
   } = useContext(GameContext)
 
   const [blockSize, setBlockSize] = useState<number>(0)
-  const [mapDimensions, setMapDimensions] = useState<any>({})
+  const [mapDimensions, setMapDimensions] = useState<{ width?: string, height?: string }>({})
 
   useEffect(() => {
-    const calcMapSize = () => {
-      const maxMapWidth = mapRef.current?.getBoundingClientRect().width * 0.98
-      const maxMapHeight = mapRef.current?.getBoundingClientRect().height * 0.98
+    if (!mapRef.current || !dimensions?.width || !dimensions?.height) return
 
-      const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
-      const evenMapheight = maxMapHeight - (maxMapHeight % 2)
+    const maxMapWidth = mapRef.current.getBoundingClientRect().width * 0.98
+    const maxMapHeight = mapRef.current.getBoundingClientRect().height * 0.98
 
-      const blockSizeX = Math.floor(evenMapWidth / (dimensions.width || 0))
-      const blockSizeY = Math.floor(evenMapheight / (dimensions.height || 0))
-      const blockSize = min([blockSizeX, blockSizeY]) as number
+    const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
+    const evenMapheight = maxMapHeight - (maxMapHeight % 2)
 
-      setMapDimensions({
-        width: blockSize * dimensions.width + 'px',
-        height: blockSize * dimensions.height + 'px',
-      })
+    const blockSizeX = Math.floor(evenMapWidth / (dimensions.width || 0))
+    const blockSizeY = Math.floor(evenMapheight / (dimensions.height || 0))
+    const blockSize = min([blockSizeX, blockSizeY]) as number
 
-      setBlockSize(blockSize)
-    }
+    setMapDimensions({
+      width: blockSize * dimensions.width + 'px',
+      height: blockSize * dimensions.height + 'px',
+    })
 
-    if (mapRef.current) {
-      calcMapSize()
-    }
-  }, [mapRef, mapRef.current, dimensions?.width, dimensions?.height])
+    setBlockSize(blockSize)
+  }, [mapRef, dimensions?.width, dimensions?.height])
 
   return (
     <div ref={mapRef} style={{ width: mapDimensions.width || '100%', height: mapDimensions.height || '100%' }}>

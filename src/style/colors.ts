@@ -4,9 +4,6 @@ import chroma from 'chroma-js';
 const positive = '#66DE93'
 const negative = '#EA2C62'
 
-export const healthStatusColor = (health: number): string =>
-  chroma.mix(negative, positive, (health || 100) / 100).hex()
-
 export const colors: any = {
   primary: '#5463FF',
   primaryDark: darken('#5463FF', 0.5),
