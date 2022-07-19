@@ -3,11 +3,25 @@ import { fireEvent, render } from '../../tests';
 import { Controls } from './Controls';
 
 describe('<Controls />', () => {
-  it('renders component', () => {
+  it('renders', () => {
     render(<Controls />)
   });
 
-  it('renders component', async () => {
+  it('renders (for desktop)', () => {
+    const { getByText } = render(<Controls />)
+
+    expect(getByText('SPACE')).toBeInTheDocument()
+    expect(getByText('SHIFT')).toBeInTheDocument()
+  });
+
+  it.skip('renders (for mobile)', () => {
+    const { getByText } = render(<Controls />)
+
+    expect(getByText('SPACE')).not.toBeInTheDocument()
+    expect(getByText('SHIFT')).not.toBeInTheDocument()
+  });
+
+  it('acts on button clicks', async () => {
     const moveX = jest.fn()
     const rotate = jest.fn()
     const drop = jest.fn()

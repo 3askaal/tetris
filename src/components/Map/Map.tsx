@@ -11,7 +11,7 @@ export const Map = () => {
     blocks
   } = useContext(GameContext)
 
-  const [blockSize, setBlockSize] = useState<number>(0)
+  const [blockSize, setBlockSize] = useState(0)
   const [mapDimensions, setMapDimensions] = useState<{ width?: string, height?: string }>({})
 
   useEffect(() => {
@@ -23,16 +23,16 @@ export const Map = () => {
     const evenMapWidth = maxMapWidth - (maxMapWidth % 2)
     const evenMapheight = maxMapHeight - (maxMapHeight % 2)
 
-    const blockSizeX = Math.floor(evenMapWidth / (dimensions.width || 0))
-    const blockSizeY = Math.floor(evenMapheight / (dimensions.height || 0))
-    const blockSize = min([blockSizeX, blockSizeY]) as number
+    const blockSizeX = Math.floor(evenMapWidth / dimensions.width)
+    const blockSizeY = Math.floor(evenMapheight / dimensions.height)
+    const newBlockSize = min([blockSizeX, blockSizeY]) as number
 
     setMapDimensions({
-      width: blockSize * dimensions.width + 'px',
-      height: blockSize * dimensions.height + 'px',
+      width: newBlockSize * dimensions.width + 'px',
+      height: newBlockSize * dimensions.height + 'px',
     })
 
-    setBlockSize(blockSize)
+    setBlockSize(newBlockSize)
   }, [mapRef, dimensions?.width, dimensions?.height])
 
   return (
@@ -47,7 +47,7 @@ export const Map = () => {
           >
             { shape.blocks.map((block: any, index: number) => (
               <SMapBlock
-                data-testid="shape-active-block"
+                data-testid={`shape-active-block-${index}`}
                 key={`block-active-${index}`}
                 color={shape.color}
                 blockSize={blockSize}
@@ -58,7 +58,7 @@ export const Map = () => {
         ) : null }
         { blocks ? blocks.map((block: any, index: number) => (
           <SMapBlock
-            data-testid="shape-block"
+            data-testid={`block-${index}`}
             key={`block-${index}`}
             color={block.color}
             dead={block.dead}

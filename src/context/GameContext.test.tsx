@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
-import {act, render} from"@testing-library/react";
-import {GameProvider, GameContext, GameContextType, GameContextDefaults} from './GameContext';
+import React, { useContext } from 'react';
+import { act, render } from"@testing-library/react";
+import { GameProvider, GameContext, GameContextType, GameContextDefaults } from './GameContext';
 import ReactGA4 from 'react-ga4';
 import { times } from 'lodash';
 import { generateShape, SHAPE_BLOCKS } from '../helpers/generate'

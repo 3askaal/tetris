@@ -7,7 +7,7 @@ import {
   ArrowDown,
   RotateCw
 } from 'react-feather'
-import isMobile from 'is-mobile'
+import { isMobile } from 'is-mobile'
 import { GameContext } from '../../context'
 import { useButton } from '@react-aria/button'
 import useBreakpoint from 'use-breakpoint';
